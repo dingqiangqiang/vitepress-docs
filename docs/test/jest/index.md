@@ -26,7 +26,7 @@ test('测试快照功能', () => {
 })
 ```
 此时会在 `__snapshots__` 文件夹下生成 `snapshot.test.js.snap`，内容如下:
-```snap
+```js
 exports[`测试快照功能 1`] = `
 Object {
   "host": "localhost123",

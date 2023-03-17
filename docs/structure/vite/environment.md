@@ -1,5 +1,15 @@
 # 开发环境搭建(下)
 ## [vitest](https://cn.vitest.dev/)
+:::tip vitest 优势
+- 1、 基于 `vite`，可以做到与 `vite` 通用配置
+- 2、 兼容 `Jest` API
+- 3、 注重性能，尽可能多地使用 `worker` 线程并发执行，可以提高测试的运行效率。
+:::
+
+::: warning 配置 `vitest` 测试组件需要以下两个库：
+- 1、`happy-dom` 用于提供测试所需要的 `Dom` 仿真。由于测试是在 `node` 环境中运行，而不是浏览器中，因而需要提供 `Dom` 对象的仿真
+- 2、`@vue/test-utils` 可以简化 `vue` 组件的测试流程。实际上使用 `jest` 或者 `vitest` 也可以直接对 `vue` 进行测试。但是每次都需要编写初始化 `vue` 实例、渲染组件等操作，并且对 `dom` 断言也比较频，比较好的办法是将这些针对 `vue` 测试的过程进程封装。
+:::
 - 1、装包
 ```sh
 pnpm i -D vitest @vue/test-utils happy-dom
@@ -11,9 +21,9 @@ pnpm i -D vitest @vue/test-utils happy-dom
 export default defineConfig({
   test: {
     globals: true,
-    environment: "happy-dom",
+    environment: "happy-dom", // 提供测试所需要的 dom 仿真
     transformMode: { 
-      web: [/.tsx$/] 
+      web: [/.tsx$/] // 支持 tsx
     }
   },
 })
@@ -33,7 +43,7 @@ import { shallowMount, mount } from "@vue/test-utils"
 // describe: 创建分组
 describe("测试 todo 组件功能是否正常", () => {
   it("测试输入框中输入内容会引发组件的数据发生变化", () => {
-    const wrapper = shallowMount(Todo)  // 只会挂载当前组件
+    const wrapper = shallowMount(Todo)  // 浅渲染，只会渲染当前组件，不会渲染它的子组件
     const input = wrapper.find("input")
     input.setValue("hello")
     expect(wrapper.vm.todo).toBe("hello")

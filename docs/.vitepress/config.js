@@ -19,14 +19,21 @@ export default defineConfig({
       { text: '组件库', link: '/component-library/guide'},
       { text: '脚手架', link: 'https://dingqiangqiang.github.io/vue-cli/01.html'},
       { text: 'Vue.js 技术揭秘', link: 'https://dingqiangqiang.github.io/vue/guide/'},
-      { text: '数据结构与算法', link: '/algorithm/tree'},
-      { 
-        text: '构建工具', 
-        link: '/structure/vite/'
-      },
       {
-        text: '测试',
+        text: '前端进阶',
         items: [
+          { 
+            text: '构建工具', 
+            link: '/structure/vite/'
+          },
+          {
+            text: '数据结构与算法',
+            link: '/algorithm/tree'
+          },
+          { 
+            text: '设计模式', 
+            link: '/design-pattern/'
+          },
           {
             text: '单元测试',
             items: [
@@ -35,9 +42,31 @@ export default defineConfig({
                 link: '/test/jest/'
               }
             ]
+          },
+          { 
+            text: '网络、协议', 
+            link: '/network/'
+          },
+        ]
+      },
+      {
+        text: '全栈基石',
+        items: [
+          { 
+            text: 'Node', 
+            link: '/node/'
+          },
+          {
+            text: 'Express',
+            link: '/express/'
+          },
+          { 
+            text: 'Koa', 
+            link: '/koa/'
           }
         ]
-      }
+      },
+      { text: '开发汇总', link: '/develop-summary/string'},
     ],
     sidebar: {
       '/component-library/': [
@@ -62,8 +91,12 @@ export default defineConfig({
               link: '/component-library/document'
             },
             {
-              text: '单元测试',
+              text: 'Jest 单元测试',
               link: '/test/jest/'
+            },
+            {
+              text: '集成 vitest',
+              link: '/component-library/vitest'
             }
           ]
         }
@@ -88,6 +121,18 @@ export default defineConfig({
               link: '/test/jest/'
             }
           ]
+        }
+      ],
+      '/design-pattern/': [
+        {
+          text: '设计模式',
+          link: '/design-pattern/'
+        }
+      ],
+      '/network/': [
+        {
+          text: '网络、协议',
+          link: '/network/'
         }
       ],
       '/structure/': [
@@ -121,8 +166,40 @@ export default defineConfig({
             {
               text: '树',
               link: '/algorithm/tree'
+            },
+            {
+              text: '位运算',
+              link: '/algorithm/byte'
+            },
+            {
+              text: '其他',
+              link: '/algorithm/other'
             }
           ]
+        }
+      ],
+      '/develop-summary/': [
+        {
+          text: '字符串转义',
+          link: '/develop-summary/string'
+        }
+      ],
+      '/node/': [
+        {
+          text: '常用 API 盘点',
+          link: '/node/'
+        }
+      ],
+      '/express/': [
+        {
+          text: 'express',
+          link: '/express/'
+        }
+      ],
+      '/koa/': [
+        {
+          text: 'koa',
+          link: '/koa/'
         }
       ]
     },
