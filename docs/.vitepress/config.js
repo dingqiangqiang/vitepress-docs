@@ -153,8 +153,28 @@ export default defineConfig({
           text: 'webpack',
           items: [
             {
-              text: '性能优化',
-              link: '/structure/webpack/'
+              text: '配置',
+              link: '/structure/webpack/dispose'
+            },
+            {
+              text: '优化',
+              link: '/structure/webpack/optimize'
+            },
+            {
+              text: 'tapable',
+              link: '/structure/webpack/tapable'
+            },
+            {
+              text: 'loader',
+              link: '/structure/webpack/loader'
+            },
+            {
+              text: 'plugin',
+              link: '/structure/webpack/plugin'
+            },
+            {
+              text: '迷你 webpack',
+              link: '/structure/webpack/webpack'
             }
           ]
         }
