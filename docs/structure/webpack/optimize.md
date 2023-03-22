@@ -59,7 +59,7 @@ module.exports = mode => {
 ```
 `.babelrc` 配置文件
 
-```rc
+```sh
 {
   "presets": [
     "@babel/preset-env",
@@ -170,7 +170,7 @@ new AddAssetHtmlCdnPlugin(true,{
 })
 ```
 
-## 4.1 Tree-shaking
+## 4.1 摇树优化
 :::tip
 摇树优化，生产环境自动开启，实现前提是 `esModule`。
 :::
@@ -224,7 +224,7 @@ require('./style.css')
 ]
 ```
 
-## 4.2 Scope Hoisting
+## 4.2 作用域提升
 
 作用域提升,可以减少代码体积，节约内存。
 新建 `d.js`
@@ -265,11 +265,12 @@ module.exports = {
   output:{
     filename: 'react.dll.js',
     path: path.resolve(__dirname, 'dll'),
-    library: 'react'
+    library: 'react',
+    // libraryTarget:'commonjs2', // 默认用 var 接收。 commonjs(exports["react"]) commonjs2(module.exports) umd this var
   },
   plugins:[
     new DllPlugin({
-      name: 'react',
+      name: 'react', // name 要和上述 library 同名
       path: path.resolve(__dirname, 'dll/manifest.json')
     })
   ]
@@ -336,7 +337,34 @@ mode !== "development" && new BundleAnalyzerPlugin() // 自动在 8888 端口启
 ## 8.代码分割
 
 抽离第三方模块、业务公共模块
+- 0、准备工作
 
+新建 `a.js`
+```js
+console.log('a')
+```
+新建 `b.js`
+```js
+console.log('b')
+```
+新建 `index.js`，引入 `a.js` 和 `b.js`
+```js
+import './a'
+import './b'
+console.log('index.js')
+
+import $ from 'jquery'
+console.log($)
+```
+新建 `other.js`，引入 `a.js` 和 `b.js`
+```js
+import './a'
+import './b'
+console.log('other.js')
+
+import $ from 'jquery'
+console.log($)
+```
 - 1、首先将项目配置成多入口
 ```js
 entry: {
@@ -348,25 +376,19 @@ output: {
   filename: "[name].js", // 同步打包的名字
 },
 ```
-- 2、新建 `test.js`
-```js
-export const test = () => {
-  return 'test'
-}
-```
-我们让`index`, `other`两个模块同时引用 `jquery` 和 `test`，新增如下配置
+此时 `a.js`、`b.js`、`jquery` 都会被打包到 `index.js` 和 `other.js` 中，如果我们想实现模块抽离可以新增如下配置: 
 
 ```js
 module.exports = {
   optimization: {
-    splitChunks: {
+    splitChunks: { // 分割代码块
       cacheGroups: { // 缓存组
-        common: { // 抽离公共业务模块 抽离到 common-index-other.js 文件中
+        common: { // 公共的模块 抽离到 common-index-other.js 文件中
           chunks: 'initial'
           minSize: 0,
           minChunks: 2
         },
-        vendor: { // 抽离第三方模块 抽离到 vendor-index-other.js 文件中
+        vendor: { // 第三方模块 抽离到 vendor-index-other.js 文件中
           test: /node_modules/,
           chunks: 'initial'
           priority: 1,
@@ -388,11 +410,14 @@ module.exports = {
 
 ```js
 devServer:{
-  hot: true
+  hot: true, // 启用热更新
+  port: 3000,
+  open: true,
+  contentBase: './dist'
 }
 
-new webpack.NamedModulesPlugin(),
-new webpack.HotModuleReplacementPlugin()
+new webpack.NamedModulesPlugin(), // 打印更新的模块路径
+new webpack.HotModuleReplacementPlugin() // 热更新插件
 ```
 
 ```js
@@ -400,7 +425,7 @@ import sum from './sum';
 console.log(sum(1, 2));
 
 if (module.hot) { // 如果支持热更新
-  module.hot.accept(() => { // 当入口文件变化后重新执行当前入口文件
+  module.hot.accept('./sum', () => { // 当入口文件变化后重新执行当前入口文件
     const sum = require('./sum')
   }) 
 }
@@ -408,7 +433,12 @@ if (module.hot) { // 如果支持热更新
 
 ## 10.IgnorePlugin
 ```js
-new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+new webpack.IgnorePlugin(/\.\/locale/, /moment/) 
+
+// main.js
+import moment from 'moment'
+import 'moment/locale/zh-cn' // 手动引入所需要的语言
+moment.locale('zh-cn')
 ```
 ## 11.打包速度分析
 ```js
@@ -423,7 +453,9 @@ module.exports = env => {
 ## 12.noParse
 对 `jquery` 这类库，内部不会在引用其他库。我们在打包的时候就没有必要去解析，这样可以增加打包速率。
 ```js
-noParse: /jquery/
+module: {
+  noParse: /jquery/ // 不去解析 jquery 中的依赖库
+}
 ```
 
 ## 13.resolve 
@@ -443,7 +475,7 @@ resolve: {
   exclude: /node_modules/
 },
 ```
-## 15.happypack
+## 15.多线程打包
 多线程打包，我们可以将不同的逻辑交给不同的线程来处理
 
 ```sh
