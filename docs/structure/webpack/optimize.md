@@ -23,7 +23,17 @@ module.exports = mode => {
         },
         {
           test: /\.js$/,
-          use: "babel-loader"
+          exclude: /node_modules/,
+          include: path.resolve('src'),
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react' // 支持 react，相当于配置 .babelrc
+              ]
+            }
+          }
         },
         {
           test: /\.css$/,
@@ -55,16 +65,6 @@ module.exports = mode => {
   "dev": "webpack-dev-server --env=development",
   "dev:build": "webpack --env=development",
   "build": "webpack --env=production"
-}
-```
-`.babelrc` 配置文件
-
-```sh
-{
-  "presets": [
-    "@babel/preset-env",
-    "@babel/preset-react"
-  ]
 }
 ```
 
@@ -363,7 +363,7 @@ import './b'
 console.log('other.js')
 
 import $ from 'jquery'
-console.log($)
+console.log($);
 ```
 - 1、首先将项目配置成多入口
 ```js

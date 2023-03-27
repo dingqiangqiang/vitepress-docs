@@ -23,6 +23,10 @@ export default defineConfig({
         text: '前端进阶',
         items: [
           { 
+            text: 'typescript', 
+            link: '/typescript/generic'
+          },
+          { 
             text: '构建工具', 
             link: '/structure/vite/'
           },
@@ -97,6 +101,17 @@ export default defineConfig({
             {
               text: '集成 vitest',
               link: '/component-library/vitest'
+            }
+          ]
+        }
+      ],
+      '/typescript/': [
+        {
+          text: '常用语法',
+          items: [
+            {
+              text: '泛型',
+              link: '/typescript/generic'
             }
           ]
         }
