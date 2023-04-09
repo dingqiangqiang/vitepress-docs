@@ -19,6 +19,7 @@ export default defineConfig({
       { text: '组件库', link: '/component-library/guide'},
       { text: '脚手架', link: 'https://dingqiangqiang.github.io/vue-cli/01.html'},
       { text: 'Vue.js 技术揭秘', link: 'https://dingqiangqiang.github.io/vue/guide/'},
+      { text: 'React', link: '/react/hooks'},
       {
         text: '前端进阶',
         items: [
@@ -73,6 +74,25 @@ export default defineConfig({
       { text: '开发汇总', link: '/develop-summary/string'},
     ],
     sidebar: {
+      '/react/': [
+        {
+          text: '常用语法',
+          items: [
+            {
+              text: 'hooks',
+              link: '/react/hooks'
+            },
+            {
+              text: 'feature',
+              link: '/react/feature'
+            },
+            {
+              text: 'redux',
+              link: '/react/redux'
+            }
+          ]
+        }
+      ],
       '/component-library/': [
         {
           text: '组件库',
