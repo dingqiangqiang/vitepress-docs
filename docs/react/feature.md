@@ -109,8 +109,96 @@ export default App;
 ```
 ## 渲染属性
 :::tip `render props`
-用函数属性的执行结果来当做自己的渲染结果
+用一个函数属性的执行结果来当做自己的渲染结果
 :::
+```js{37}
+class Resizable extends Component {
+  state = {
+    size: [window.innerWidth, window.innerHeight]
+  }
+
+  onResize = () => {
+    this.setState({
+      size: [window.innerWidth, window.innerHeight]
+    })
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.onResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize)
+  }
+
+  render() {
+    return this.props.render(this.state.size)
+  }
+}
+
+class Foo extends Component {
+  render () {
+    const [width, height] = this.props.size
+    return (
+      <div>{ width }:{ height }</div>
+    )
+  }
+}
+
+class App extends Component {
+  render() {
+    return (
+      <div><Resizable render = {size => <Foo size={size}></Foo>}></Resizable></div>
+    )
+  }
+}
+export default App
+```
 ## 高级组件(HOC)
+```js{36}
+function Resizable(ChildComponent) {
+  return class Wrapper extends Component {
+    state = {
+      size: [window.innerWidth, window.innerHeight]
+    }
+
+    onResize = () => {
+      this.setState({
+        size: [window.innerWidth, window.innerHeight]
+      })
+    }
+
+    componentDidMount() {
+      window.addEventListener('resize', this.onResize)
+    }
+
+    componentWillUnmount() {
+      window.removeEventListener('resize', this.onResize)
+    }
+  
+    render() {
+      return <ChildComponent size={ this.state.size }></ChildComponent>
+    }
+  } 
+}
+
+class Foo extends Component {
+  render () {
+    const [width, height] = this.props.size
+    return (
+      <div>{ width }:{ height }</div>
+    )
+  }
+}
+
+const WrapperedComponent = Resizable(Foo)
+
+class App extends Component {
+  render () {
+    return (<div><WrapperedComponent/></div>)
+  }
+}
+export default App;
+```
 
 
