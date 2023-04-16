@@ -141,8 +141,16 @@ export default defineConfig({
           text: 'Vue.js设计与实现',
           items: [
             {
+              text: '一文看懂 Vue.js 3.0 的优化',
+              link: '/vue3/optimize'
+            },
+            {
               text: '权衡的艺术',
               link: '/vue3/guide'
+            },
+            {
+              text: 'setup',
+              link: '/vue3/setup'
             }
           ]
         }
@@ -212,6 +220,24 @@ export default defineConfig({
               link: '/structure/webpack/webpack'
             }
           ]
+        },
+        {
+          text: 'rollup',
+          items: [
+            {
+              text: '简介',
+              link: '/structure/rollup/'
+            },
+          ]
+        },
+        {
+          text: 'parcel',
+          items: [
+            {
+              text: '简介',
+              link: '/structure/parcel/'
+            },
+          ]
         }
       ],
       '/algorithm/': [
@@ -237,6 +263,10 @@ export default defineConfig({
         {
           text: '字符串转义',
           link: '/develop-summary/string'
+        },
+        {
+          text: 'charles',
+          link: '/develop-summary/charles'
         }
       ],
       '/node/': [

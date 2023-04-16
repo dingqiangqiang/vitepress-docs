@@ -200,5 +200,20 @@ class App extends Component {
 }
 export default App;
 ```
+## 无状态组件
+:::tip 介绍
+如果类组件只有一个 `render` 函数，那么完全可以使用函数组件来代替(**性能更高**)。
+```js
+class Comp extends Component {
+  render () {
+    return (<div>Comp<div>)
+  }
+}
+
+function Comp(props) {
+  return (<div>Comp<div>)
+}
+```
+:::
 
 
