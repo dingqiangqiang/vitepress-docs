@@ -267,6 +267,10 @@ export default defineConfig({
         {
           text: 'charles',
           link: '/develop-summary/charles'
+        },
+        {
+          text: '常用布局',
+          link: '/develop-summary/layout'
         }
       ],
       '/node/': [
