@@ -14,7 +14,7 @@ hero:
       link: https://dingqiangqiang.github.io/vue-cli/01.html
     - theme: brand
       text: vue3
-      link: /vue3/guide
+      link: /vue3/optimize
     - theme: alt
       text: vuepress 站点
       link: https://dingqiangqiang.github.io/

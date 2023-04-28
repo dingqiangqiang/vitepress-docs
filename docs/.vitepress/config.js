@@ -146,7 +146,7 @@ export default defineConfig({
             },
             {
               text: '权衡的艺术',
-              link: '/vue3/guide'
+              link: '/vue3/weigh'
             },
             {
               text: 'setup',
@@ -227,6 +227,10 @@ export default defineConfig({
             {
               text: '简介',
               link: '/structure/rollup/'
+            },
+            {
+              text: '打包 vue-router',
+              link: '/structure/rollup/router'
             },
           ]
         },

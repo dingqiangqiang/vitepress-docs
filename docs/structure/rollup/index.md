@@ -89,7 +89,15 @@ npx rollup --config // 使用默认配置文件
 npx rollup --config rollup.prod.js // 指定配置文件路径
 ```
 ## 输出格式
-`rollup` 支持输出多种格式的文件，具体配置如下：
+`rollup` 支持输出多种格式的文件：
+- `es` – 将 `bundle` 保留为 `ES` 模块，适用于其他打包工具，以及支持 `script type=module` 标签的浏览器。（别名：`esm`、`module`）
+- `amd` – 异步模块加载，适用于 `requirejs` 等模块加载器
+- `cjs` – 适用于 `Node` 环境和其他打包工具（别名：`commonjs`）
+- `iife` – 自执行函数，适用于 `script` 标签
+- `umd` – 通用模块定义规范，同时支持 `amd`、`cjs`、`iife`
+- `system` – `SystemJS` 模块加载器的原生格式（别名：`systemjs`）
+
+具体配置如下：
 ```js
 // ./rollup.config.js
 const formats = ['es', 'amd', 'cjs', 'iife', 'umd', 'system']
@@ -286,4 +294,8 @@ export default {
 - 浏览器环境中，代码拆分功能必须使用 `require.js` 这样的 `AMD` 库
 :::
 
-**应用开发使用 webpack，类库或者框架开发使用 rollup**
+综合以上特点，如果我们开发的是一个应用，需要大量引用第三方模块，同时还需要 `HMR` 提升开发体验，应用过大就必须要分包。上述这些需求 `rollup` 都无法满足。
+
+如果开发一个框架或者类库，那这些优点就特别有必要，而缺点呢几乎也都可以忽略，所以在很多像 `React` 或者 `Vue` 之类的框架都是使用 `rollup` 作为模块打包器，而并非 `webpack`。
+
+总结一下：**webpack 大而全，rollup 小而美。应用开发使用 webpack，类库或者框架开发使用 rollup**。

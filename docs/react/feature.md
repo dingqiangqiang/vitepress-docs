@@ -215,5 +215,82 @@ function Comp(props) {
 }
 ```
 :::
+## setState
+- 异步更新(默认)
+```js
+class Demo extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      val: 0
+    }
+  }
+  componentDidMount() {
+    this.setState({ val: this.state.val + 1})
+    console.log(this.state.val) // 0
 
+    this.setState({ val: this.state.val + 2})
+    console.log(this.state.val) // 0
+  }
+}
 
+```
+- 合并后更新(默认)
+```js
+componentDidMount() {
+  this.setState({ val: this.state.val + 1})
+
+  this.setState({ val: this.state.val + 2}, () => { // 后调获取最新值
+    console.log(this.state.val) // 2
+  })
+}
+```
+
+- 同步更新(不在 `React` 上下文中触发)
+:::warning 场景举例
+1、`setTimeout`、`setInterval`、`promise.then`
+
+2、自定义的 `DOM` 事件
+
+3、`Ajax` 回调
+:::
+```js
+componentDidMount() {
+  setTimeout(() => {
+    this.setState({ val: this.state.val + 1})
+    console.log(this.state.val) // 1
+    this.setState({ val: this.state.val + 1})
+    console.log(this.state.val) // 2
+  }, 0)
+
+  document.addEventListener('click', () => { // 手动 dom 事件
+    this.setState({ val: this.state.val + 1})
+    console.log(this.state.val) // 3
+  })
+}
+```
+:::danger React18 中的变化
+1、React 18中，上述3种场景可以异步更新(Auto Batch)
+
+2、需将 `ReactDOM.render` 替换为 `ReactDOM.createRoot`
+:::
+- 不合并场景
+
+1、同步更新
+
+2、传入函数
+```js
+this.setState((prevState) => {
+  return {
+    val: prevState.val + 1 // 1
+  }
+})
+this.setState((prevState) => {
+  return {
+    val: prevState.val + 1 // 2
+  }
+})
+```
+- 宏任务 or 微任务?
+
+`setState` 本质是同步，因为要考虑性能，当多次修改 state 时，只会进行 1 次 DOM 渲染。
