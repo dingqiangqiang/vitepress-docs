@@ -67,7 +67,7 @@ export default defineConfig({
           },
           { 
             text: 'Koa', 
-            link: '/koa/'
+            link: '/koa/onion'
           }
         ]
       },
@@ -291,8 +291,8 @@ export default defineConfig({
       ],
       '/koa/': [
         {
-          text: 'koa',
-          link: '/koa/'
+          text: '洋葱模型',
+          link: '/koa/onion'
         }
       ]
     },
