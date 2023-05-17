@@ -225,12 +225,16 @@ export default defineConfig({
           text: 'rollup',
           items: [
             {
-              text: '简介',
+              text: '一文看懂 rollup',
               link: '/structure/rollup/'
             },
             {
-              text: '打包 vue-router',
+              text: 'rollup 打包 vue-router',
               link: '/structure/rollup/router'
+            },
+            {
+              text: '从 vue-router 看 package.json',
+              link: '/structure/rollup/package'
             },
           ]
         },
@@ -238,7 +242,7 @@ export default defineConfig({
           text: 'parcel',
           items: [
             {
-              text: '简介',
+              text: '一文看懂 parcel',
               link: '/structure/parcel/'
             },
           ]
@@ -275,6 +279,10 @@ export default defineConfig({
         {
           text: '常用布局',
           link: '/develop-summary/layout'
+        },
+        {
+          text: '跨域',
+          link: '/develop-summary/cross-domain'
         }
       ],
       '/node/': [
@@ -293,6 +301,10 @@ export default defineConfig({
         {
           text: '洋葱模型',
           link: '/koa/onion'
+        },
+        {
+          text: 'RESTful',
+          link: '/koa/restful'
         }
       ]
     },
