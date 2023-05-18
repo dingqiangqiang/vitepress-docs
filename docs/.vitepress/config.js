@@ -12,9 +12,12 @@ export default defineConfig({
     theme: 'github-dark',
     lineNumbers: true
   },
+  head: [
+    ['link', { rel: 'icon', href: '/niumowang.jpeg'}]
+  ],
   // 主题配置
   themeConfig: {
-    // logo: '/niumowang.jpeg',
+    logo: '/niumowang.jpeg',
     nav: [
       { text: '组件库', link: '/component-library/guide'},
       { text: '脚手架', link: 'https://dingqiangqiang.github.io/vue-cli/01.html'},

@@ -1,4 +1,4 @@
-## package.json 解读
+# package.json 解读
 ## 描述配置 
 1、`name`: 项目的名称
 
@@ -63,6 +63,46 @@
 指定 `TypeScript` 类型定义的入口文件
 
 8、`browserslist`: 设置项目的浏览器兼容情况(`babel` 和 `autoprefixer` 等工具会使用该配置对代码进行转换)。另外我们也可以使用 .`browserslistrc` 文件进行配置。
+
+9、`exports`
+> 条件导出(node >= 14.13)。 该字段可以配置不同环境对应的模块入口文件，当它存在时，优先级最高。
+
+比如使用 `require` 和 `import` 字段根据模块规范分别定义入口：
+```json
+"exports": {
+  "require": "../dist/vue-router.common.js",
+  "import": "./dist/vue-router.esm.js"
+}
+```
+当使用 `import 'xxx'` 和 `require('xxx')` 时会从不同的入口引入文件。另外 `exports` 也支持使用 `browser` 和 `node` 字段定义 `browser` 和` node` 环境中的入口。
+
+上方的写法其实等同于：
+```json
+"exports": {
+  ".": {
+    "require": "../dist/vue-router.common.js",
+    "import": "./dist/vue-router.esm.js"
+  }
+}
+```
+
+之所以要加一个层级，把 `require` 和 `import` 放在 "." 下面，是因为 `exports` 除了支持配置包的默认导出，还支持配置包的子路径。
+
+示例如下:
+![An image](../images/package-exports.png)
+
+::: warning 注意
+除了对导出的文件路径进行封装，`exports` 还限制了使用者不可以访问未在 `exports` 中定义的任何其他路径。
+
+比如发布的 `dist` 文件里有一些内部模块 `dist/internal/module` ，被用户单独引入使用的话可能会导致主模块不可用。为了限制外部的使用，我们可以不在 `exports` 定义这些模块的路径，这样外部引入 `packageA/dist/internal/module` 模块的话就会报错。
+:::
+
+10、`lint-staged`:
+对 `git` 暂存区的文件进行操作(一般用于在代码提交前执行 `lint` 校验)
+
+11、`gitHooks`: 当 `git` 存储库中发生特定事件时会自动运行特定脚本，允许开发者定制 `git` 的内部行为。
+
+我们来看看上述字段在 `vue-router` 中的配置情况: 
 ```json
 {
   "files": [
@@ -76,9 +116,65 @@
   "unpkg": "dist/vue-router.js",
   "jsdelivr": "dist/vue-router.js",
   "sideEffects": false,
-   "typings": "types/index.d.ts",
+  "typings": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "node": "./dist/vue-router.mjs",
+        "default": "./dist/vue-router.esm.js"
+      },
+      "require": "./dist/vue-router.common.js",
+      "types": "./types/index.d.ts"
+    },
+    "./composables": {
+      "import": "./composables.mjs",
+      "require": "./composables.js",
+      "types": "./composables.d.ts"
+    },
+    "./dist/*": "./dist/*",
+    "./types/*": "./types/*",
+    "./package.json": "./package.json"
+  },
+  "lint-staged": {
+    "*.{js,vue}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged",
+    "commit-msg": "node scripts/verifyCommitMsg.js"
+  }
 }
 ```
+
+`scripts/verifyCommitMsg.js` 校验逻辑如下:
+```sh
+npm install yorkie --save-dev(^2.0.0)
+```
+
+```js
+const chalk = require('chalk')  // eslint-disable-line
+const msgPath = process.env.GIT_PARAMS
+const msg = require('fs').readFileSync(msgPath, 'utf-8').trim()
+
+const commitRE = /^(v\d+\.\d+\.\d+(-(alpha|beta|rc.\d+))?$)|((revert: )?(feat|fix|docs|style|refactor|perf|test|workflow|ci|chore|types|build)(\(.+\))?: .{1,50})/
+// ^(build|chore|ci|docs|feat|fix|wip|perf|refactor|revert|style|test|temp|)(\(.+\))?: .{1,50}
+
+if (!commitRE.test(msg)) {
+  console.log()
+  console.error(
+    `  ${chalk.bgRed.white(' ERROR ')} ${chalk.red(`invalid commit message format.`)}\n\n` +
+    chalk.red(`  Proper commit message format is required for automated changelog generation. Examples:\n\n`) +
+    `    ${chalk.green(`feat(compiler): add 'comments' option`)}\n` +
+    `    ${chalk.green(`fix(v-model): handle events on blur (close #28)`)}\n\n` +
+    chalk.red(`  See .github/COMMIT_CONVENTION.md for more details.\n`) +
+    chalk.red(`  You can also use ${chalk.cyan(`npm run commit`)} to interactively generate a commit message.\n`)
+  )
+  process.exit(1) // 以非 0 值退出，放弃提交
+}
+```
+
 ## 脚本配置
 1、`scripts`: 指定项目的内置脚本命令，基于 `npm run xx` 运行，通常包含项目开发、构建、代码格式化、测试、发布、文档部署等命令。
 ```json

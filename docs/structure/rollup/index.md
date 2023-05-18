@@ -1,4 +1,5 @@
-# [rollup](https://cn.rollupjs.org/)
+# [Rollup](https://cn.rollupjs.org/)
+[[toc]]
 ## 简介
 `rollup` 是一个用于 `JavaScript` 的模块打包工具。它可以将项目中散落的细小模块打包为整块代码，从而使得这些划分的模块可以更好地运行在浏览器环境或 `Node.js` 环境(**默认只能处理 `ESM` 模块**)。
 
