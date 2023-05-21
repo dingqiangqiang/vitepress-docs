@@ -27,7 +27,7 @@ export default defineConfig({
         text: '前端进阶',
         items: [
           { 
-            text: 'typescript', 
+            text: 'Typescript', 
             link: '/typescript/generic'
           },
           { 
@@ -130,10 +130,10 @@ export default defineConfig({
       ],
       '/typescript/': [
         {
-          text: '常用语法',
+          text: 'Typescript',
           items: [
             {
-              text: '泛型',
+              text: '常用语法梳理',
               link: '/typescript/generic'
             }
           ]
@@ -152,8 +152,12 @@ export default defineConfig({
               link: '/vue3/weigh'
             },
             {
-              text: 'setup',
+              text: 'setup 语法糖',
               link: '/vue3/setup'
+            },
+            {
+              text: '权限校验、指令妙用',
+              link: '/vue3/permission'
             }
           ]
         }

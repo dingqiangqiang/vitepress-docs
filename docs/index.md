@@ -9,12 +9,12 @@ hero:
     src: /logo.svg
     alt: logo
   actions:
-    - theme: brand
-      text: 组件库
-      link: /component-library/guide
-    - theme: brand
-      text: 脚手架
-      link: https://dingqiangqiang.github.io/vue-cli/01.html
+  #   - theme: brand
+  #     text: 组件库
+  #     link: /component-library/guide
+  #   - theme: brand
+  #     text: 脚手架
+  #     link: https://dingqiangqiang.github.io/vue-cli/01.html
     - theme: brand
       text: vue3
       link: /vue3/optimize
@@ -26,12 +26,15 @@ features:
   - icon: 🛠️
     title: 从零搭建组件库
     details: 基于 vue3 + vite + ts
+    link: /component-library/guide
   - icon: 🔩
     title: 脚手架技术揭秘 
     details: 基于 vue-cli
+    link: https://dingqiangqiang.github.io/vue-cli/01.html
   - icon: 📦
     title: 构建工具
     details: vite、webpack、rollup
+    link: /structure/vite/
   - icon: 📝
     title: 数据结构与算法
 ---
