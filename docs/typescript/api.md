@@ -30,6 +30,41 @@ let strLength: number = (<string>someValue).length // '尖括号'语法
 let strLength: number = (someValue as string).length // as 语法
 ```
 两种形式是等价的，至于使用哪个大多数情况下是凭个人喜好。不过在 `ts` 里使用 `JSX` 时，只有 `as` 语法断言是被允许的。
+- `unknown`
+> **不可预先定义的类型**，可替代 `any` 同时保留静态检查的能力(`any` 放弃了静态检查)
+
+不同点: 在静态编译的时候，`unknown` 不能调用任何方法，而 `any` 可以
+
+使用场景: 避免使用 `any` 作为函数的参数类型而导致缺失静态类型检查
+```ts
+function test(input: unknown): number {
+  if (Array.isArray(input)) {
+    return input.length
+  }
+  return input.length; // error: input是unknown类型，静态检查报错
+}
+```
+- `never`
+> 没法正常结束返回的类型，一个必定会报错或者死循环的函数会返回这样的类型(是所有类型的子类型)
+```ts
+type Test = never extends boolean ? string : number; // string
+
+function foo(): never { throw new Error('error message') }
+function foo(): never { while(true){} }
+```
+
+任何类型联合上 `never` 类型，还是原来的类型
+
+在函数中调用了返回 `never` 的函数后，之后的代码都会变成 `deadcode`
+
+无法把其他类型赋给 `never`
+
+```ts
+type P<T> = T extends 'x' ? string : number;
+type Test2 = P<never> // never
+```
+`never` 被认为是空的联合类型，也就是没有任何项的联合类型，所以还是会满足分配条件类型。但没有任何联合项可以分配，所以 `P<T>`根本就没有执行，就和永远没有返回的函数一样，属于 `never` 类型。
+
 ## 接口
 >  可以对值所具有的结构进行类型检查，又被称做'鸭式辨型法'或'结构性子类型化'。作用就是为类型命名和为你的代码或第三方代码定义契约。
 
@@ -788,7 +823,16 @@ button.animate(0, 0, 'uneasy') // error
 你只能从三种允许的字符中选择其一来做为参数传递，传入其它值则会产生错误。
 ## 内置类型
 - 非空断言运算符 !
-> 作用于编译阶段的非空判断，用在变量名或者函数名之后，用来强调对应的元素是非 null | undefined。适用于我们明确知道不会返回空值的场景，从而减少冗余的代码判断
+> 作用于**编译阶段的非空判断**，用在变量名或者函数名之后，用来强调对应的元素是非 null | undefined。适用于我们明确知道不会返回空值的场景，从而减少冗余的代码判断
+
+- 可选链操作符
+> `?.`用来判断左侧的表达式是否是 `null` 或 `undefined`，如果是则会停止表达式运行，可以减少大量的 `&&` 运算
+
+- 空值合并运算符
+> `??` 与 `||` 的功能相似，只不过 `??` 在左侧表达式结果为 `null` 或 `undefined` 时，才会返回右侧表达式，而 `||` 对 false、''、NaN、0 等逻辑空值也会生效
+
+- 数字分隔符_
+> 用来对长数字做任意的分隔，便于数字的阅读，编译出来的代码是没有下划线的
 
 - `keyof`: 获取键名的联合类型
 ```ts
@@ -798,7 +842,7 @@ interface A {
 }
 let a: keyof A // a: "name" | "age"
 ```
-- `typeof`: 获取类型
+- `typeof`: 获取对象/实例类型
 ```ts
 let person = {
     name: 'zhangsan',
@@ -827,6 +871,81 @@ type TypeToNumber<T> = {
 
 const obj: TypeToNumber<Person> = { name: 10, age: 10 }
 ```
+- `extends`
+  + 1、继承类型
+  ```ts
+  interface IName {
+    name: string;
+  }
+
+  interface IPerson extends IName {
+    age: number;
+  }
+
+  const person: IPerson = {
+    name: 'name',
+    age: 18
+  }
+  ```
+  + 2、条件判断(类似三元表达式)
+
+    > 当 `extends` 左边的类型可以赋值给右边的类型时，你会在第一个分支中获取获得这个类型，否则会在第二个个分支中获得这个类型
+    ```ts
+    interface IAnimal {
+      name: string;
+    }
+
+    interface IDog extends IAnimal {
+      color: string;
+    }
+
+    // Test 的类型为 string
+    type Test = IDog extends IAnimal ? string : number;
+    ```
+  + 3、分配条件类型
+
+    当 `extends` 前面的参数是泛型类型并且参数是联合类型时，此时使用分配律计算最后的结果
+
+    > 即把联合类型中的每个类型代入条件判断得到每个类型的结果，再把每个类型的结果联合起来，得到最后的类型结果
+    ```ts
+    type P<T> = T extends 'x' ? string : number;
+    type Test = P<'x' | 'y'> // string | number
+
+    // 分析如下:
+    'x' extends 'x' ? string : number; // string
+    'y' extends 'x' ? string : number; // number
+    type Test3 = string | number
+    ```
+    注: 分配条件类型是系统默认的行为，我们可以使用 `[]` 把泛型类型包起来，此时 `extends` 前面的参数就变成这个样子 `['x' | 'y']`，不满足触发分配条件类型的条件，按照普通条件来判断，得到最后的结果为 `number`
+- `infer` 
+  > 推断：不用预先指定在泛型列表中，在运行时会自动判断，不过得先预定义好整体的结构
+  + `demo1`
+  ```ts
+  type Foo<T> = T extends {t: infer Test} ? Test: string
+
+  type One = Foo<number>  // string。因为 number 不是一个包含 t 的对象类型
+  type Two = Foo<{ t: boolean }>  // boolean。因为泛型参数匹配上了，使用了 infer 推断的类型
+  type Three = Foo<{ a: number, t: () => void }> // () => void。泛型定义是参数的子集，同样适配
+  ```
+  :::tip 通俗易懂的解释
+  首先看 `extends` 后面的内容，`{ t: infer Test }` 可以看成是包含 `t` 属性的类型定义，`t` 属性的 `value` 类型通过 `infer`进行推断后会赋值给 `Test` 类型，如果泛型实际参数符合 `{ t: infer Test }` 的定义那么返回的就是 `Test` 类型，否则返回 `string`
+  :::
+  + `demo2`
+  ```ts
+  // infer P 表示待推断的函数参数
+  type ParamType<T> = T extends (arg: infer P) => any ? P : T;
+  // 如果 T 能赋值给 (arg: infer P) => any，则结果是 (arg: infer P) => any 类型中的参数 P，否则返回为 T。
+
+  interface User {
+    name: string;
+    age: number;
+  }
+
+  type Func = (user: User) => void;
+
+  type Param = ParamType<Func>; // Param = User
+  type AA = ParamType<string>; // string
+  ```
 - `Partial<T>`
 > 将泛型中全部属性变为可选的
 ```ts{2}
@@ -865,4 +984,36 @@ type Required<T> = {
   [P in keyof T]-?: T[P]
 }
 ```
-- `returnType`: 获取类型
+- `ReturnType<T>`:
+> 获取 `T` 类型函数对应的返回值类型
+```ts
+type ReturnType<T extends (...args: any) => any>
+  = T extends (...args: any) => infer R ? R : any;
+
+function foo(x: string | number): string | number { /*..*/ }
+type FooType = ReturnType<foo>;  // string | number
+```
+- `Exclude<T, U>`
+> 从 `T` 中剔除可以赋值给 `U` 的类型
+```ts
+type Exclude<T, U> = T extends U ? never : T // 这里的 extends 返回的 T 是原来的 T 和 U 无交集的属性
+
+type T1 = Exclude<"a" | "b" | "c", "a" | "b">   // "c"
+type T2 = Exclude<string | number | (() => void), Function> // string | number
+```
+- `Extract<T, U>`
+> 提取 `T` 中可以赋值给 `U` 的类型
+```ts
+type Exclude<T, U> = T extends U ? T : never;
+
+type Test = Exclude<'A' | 'B', 'A'> // 'A' 
+// 其实就是应用了分配条件类型，具体分析如下
+type Test = Exclude<'A', 'A'> ｜ type Test = Exclude<'B', 'A'>
+type Test = 'A' extends 'A' ? 'A' : never ｜ 'B' extends 'A' ? 'B' : never
+type Test = 'A' ｜ never
+type Test = 'A'
+```
+- `NonNullable<T>`
+> 从 `T` 中剔除 `null` 和 `undefined`
+- `InstanceType<T>`
+> 获取构造函数类型的实例类型

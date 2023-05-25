@@ -28,7 +28,7 @@ export default defineConfig({
         items: [
           { 
             text: 'Typescript', 
-            link: '/typescript/generic'
+            link: '/typescript/api'
           },
           { 
             text: '构建工具', 
@@ -134,7 +134,11 @@ export default defineConfig({
           items: [
             {
               text: '常用语法梳理',
-              link: '/typescript/generic'
+              link: '/typescript/api'
+            },
+            {
+              text: '进阶特性',
+              link: '/typescript/advanced'
             }
           ]
         }
@@ -156,8 +160,16 @@ export default defineConfig({
               link: '/vue3/setup'
             },
             {
-              text: '权限校验、指令妙用',
+              text: '权限校验',
               link: '/vue3/permission'
+            },
+            {
+              text: '指令妙用',
+              link: '/vue3/directive'
+            },
+            {
+              text: '组件封装',
+              link: '/vue3/components'
             }
           ]
         }

@@ -2,9 +2,9 @@
 layout: home
 
 hero:
-  name: 前端工程化
-  text: 工程化原理揭秘
-  tagline: 探索组件库、脚手架实现原理
+  name: Strive blog
+  text: 积跬步以至千里
+  tagline: 前端技术博客
   image:
     src: /logo.svg
     alt: logo
