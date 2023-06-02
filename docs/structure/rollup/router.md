@@ -386,8 +386,8 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
   echo "Releasing v$VERSION ..."
-  # commit
-   git add -A
+  # commit 前提: 项目中需要有被更改的文件
+   git add .
    git commit -m "build: bundle $VERSION"
    npm version $VERSION --message "chore(release): %s"
 

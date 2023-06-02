@@ -182,3 +182,60 @@ app.use(async (ctx, next) => {
 })
 ```
 :::
+## `router` 路由导航守卫模拟
+```js
+class VueRouter {
+  constructor() {
+    this.beforeHooks = []
+  }
+
+  beforeEach (fn) {
+    this.beforeHooks.push(fn)
+  }
+
+  confirmTransition() {
+    const iterator = (hook, next) => {
+      try {
+        hook({ to: '即将要进入的目标，即路由对象' }, { from: '当前导航正要离开的路由' }, () => { next() })
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    runQueue(this.beforeHooks, iterator, () => {
+      console.log('completed')
+    })  
+  }
+}
+
+function runQueue (queue, fn, cb) {
+  const step = index => {
+    if (index >= queue.length) {
+      cb()
+    } else {
+      if (queue[index]) {
+        fn(queue[index], () => {
+          step(index + 1)
+        })
+      } else {
+        step(index + 1)
+      }
+    }
+  }
+  step(0)
+} 
+
+// 调用
+const router = new VueRouter()
+
+router.beforeEach((to, from , next) => {
+  console.log(to, '执行了第 1 个导航守卫')
+  next()
+})
+router.beforeEach((to, from , next) => {
+  console.log(from, '执行了第 2 个导航守卫')
+  next()
+})
+
+router.confirmTransition()
+```
+[参考链接 > 导航守卫](https://dingqiangqiang.github.io/vue/vue-router/transition-to.html#%E5%AF%BC%E8%88%AA%E5%AE%88%E5%8D%AB)

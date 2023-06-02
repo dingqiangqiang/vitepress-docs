@@ -46,7 +46,7 @@ export default defineConfig({
             text: '单元测试',
             items: [
               {
-                text: 'jest',
+                text: 'Jest',
                 link: '/test/jest/'
               }
             ]
@@ -176,7 +176,7 @@ export default defineConfig({
       ],
       '/test/': [
         {
-          text: 'jest',
+          text: 'Jest',
           items: [
             {
               text: '进阶语法',
@@ -318,12 +318,16 @@ export default defineConfig({
       ],
       '/koa/': [
         {
-          text: '洋葱模型',
+          text: '洋葱模型/导航守卫',
           link: '/koa/onion'
         },
         {
           text: 'RESTful',
           link: '/koa/restful'
+        },
+        {
+          text: 'MongoDB',
+          link: '/koa/mongodb'
         }
       ]
     },
