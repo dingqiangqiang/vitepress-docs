@@ -5,9 +5,9 @@ hero:
   name: Strive blog
   text: 积跬步以至千里
   tagline: 前端技术博客
-  image:
-    src: /logo.svg
-    alt: logo
+  # image:
+    # src: /logo.svg
+    # alt: logo
   actions:
   #   - theme: brand
   #     text: 组件库
@@ -16,8 +16,8 @@ hero:
   #     text: 脚手架
   #     link: https://dingqiangqiang.github.io/vue-cli/01.html
     - theme: brand
-      text: vue3
-      link: /vue3/optimize
+      text: vue 专栏
+      link: /vue/optimize
     - theme: alt
       text: vuepress 站点
       link: https://dingqiangqiang.github.io/

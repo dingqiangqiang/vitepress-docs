@@ -143,33 +143,41 @@ export default defineConfig({
           ]
         }
       ],
-      '/vue3/': [
+      '/vue/': [
         {
-          text: 'Vue.js设计与实现',
+          text: 'Vue 专栏',
           items: [
             {
               text: '一文看懂 Vue.js 3.0 的优化',
-              link: '/vue3/optimize'
+              link: '/vue/optimize'
             },
             {
               text: '权衡的艺术',
-              link: '/vue3/weigh'
+              link: '/vue/weigh'
+            },
+            {
+              text: '响应式原理剖析',
+              link: '/vue/reactive'
+            },
+            {
+              text: '揭秘 diff 神秘面纱',
+              link: '/vue/diff'
+            },
+            {
+              text: '编译相关',
+              link: '/vue/compile'
             },
             {
               text: 'setup 语法糖',
-              link: '/vue3/setup'
-            },
-            {
-              text: '权限校验',
-              link: '/vue3/permission'
-            },
-            {
-              text: '指令妙用',
-              link: '/vue3/directive'
+              link: '/vue/setup'
             },
             {
               text: '组件封装',
-              link: '/vue3/components'
+              link: '/vue/components'
+            },
+            {
+              text: '面试题梳理',
+              link: '/vue/interview'
             }
           ]
         }
