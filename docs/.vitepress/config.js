@@ -176,7 +176,7 @@ export default defineConfig({
               link: '/vue/components'
             },
             {
-              text: '面试题梳理',
+              text: '大杂脍',
               link: '/vue/interview'
             }
           ]
