@@ -1,4 +1,7 @@
 # 大杂脍汇总
+## new Vue 过程中做了些什么
+
+![An image](./images/lifecycle.png)
 ## v-once
 > 内置指令: 只渲染一次元素或组件，重新渲染时，元素、组件及其所有的子节点将被视为静态内容并跳过(可以缓存虚拟节点)，用于优化更新性能。
 
@@ -398,4 +401,573 @@ child1.data.name = 'haha'
 // 修改 child1 中的 name，child2 中的 name 不会变化
 console.log(child1.data.name, child2.data.name) // 'haha' 'test'
 ```
+## Vue 中的过滤器实现原理
+> 过滤器本质不改变原始数据，只是对数据进行加工处理后返回过滤后的数据在进行调用处理，本质就是纯函数
+
+使用场景: 单位转换、千分符、文本格式化、时间格式化等
+
+```vue
+<div>{{ message | filterA('arg1') }}</div>
+
+Vue.filter('filterA', function (value) {})
+```
+上述模板编译结果如下:
+```js
+function render() {
+  with(this) { 
+    return _c('div', [_v(_s(_f("filterA")(message, 'arg1')))]) 
+  }
+}
+```
+源码实现:
+```js
+target._f = resolveFilter
+
+function resolveFilter (id) {
+  return resolveAsset(this.$options, 'filters', id)
+}
+
+function resolveAsset (options, type, id) {
+  const assets = options[type]
+  if (hasOwn(assets, id)) return assets[id]
+  ...
+}
+```
+`resolveAsset` 会在 filters 选项中根据过滤器的名称查找对应的函数，找到后返回。该函数会接收 message、arg1 作为参数(看上述编译结果)
+
+::: warning 警告
+Vue3 把过滤器移除了，它本质上是一个函数。我们可以使用函数来代替过滤器的功能，伪代码如下
+```js
+<p>{{ format(number) }}</p>
+const format = (n) => { return ... }
+```
+::: 
+## 响应式原理
+> Vue 在初始化数据时，会给 data 中的属性使用 Object.defineProperty 重新定义所有属性：当获取对应属性时，会进行依赖收集(收集当前组件的watcher)；当属性发生变化时，会通知相关依赖进行更新操作。
+
+流程如下:
+![An image](./images/vue2-reactive.png)
+
+源码实现:
+```js
+// initState
+function initState (vm: Component) {
+  const opts = vm.$options
+  if (opts.data) {
+    initData(vm)
+  }
+}
+// initData
+function initData (vm: Component) {
+  let data = vm.$options.data
+  data = typeof data === 'function' ? getData(data, vm) : data || {}
+  ...
+  observe(data, true /* asRootData */)
+}
+// observe
+export function observe (value, ...) {
+  if (!isObject(value) || value instanceof VNode) {
+    return
+  }
+  let ob = new Observer(value)
+  ...
+  return ob
+}
+// Observer
+class Observer {
+  constructor (value) {
+    this.value = value
+    this.dep = new Dep()
+    if (Array.isArray(value)) { // 数组
+      ...
+    } else { // 对象
+      this.walk(value)
+    }
+  }
+
+  walk (obj: Object) {
+    const keys = Object.keys(obj)
+    for (let i = 0; i < keys.length; i++) {
+      defineReactive(obj, keys[i])
+    }
+  }
+}
+// defineReactive
+export function defineReactive (obj, key, val, shallow) {
+  const dep = new Dep()
+  ...
+  if (arguments.length === 2) {
+    val = obj[key]
+  }
+
+  let childOb = !shallow && observe(val) // 递归
+  Object.defineProperty(obj, key, {
+    enumerable: true,
+    configurable: true,
+    get: function reactiveGetter () {
+      const value = val
+      if (Dep.target) {
+        dep.depend() // 依赖收集
+        if (childOb) {
+          childOb.dep.depend() // 子节点依赖收集
+          if (Array.isArray(value)) {
+            dependArray(value) // 数组依赖收集
+          }
+        }
+      }
+      return value
+    },
+    set: function reactiveSetter (newVal) {
+      const value = val
+      /* eslint-disable no-self-compare */
+      if (newVal === value) {
+        return
+      }
+      ...
+      val = newVal
+      childOb = !shallow && observe(newVal)
+      dep.notify()
+    }
+  })
+}
+```
+## 如何检测数组变化？
+> 使用函数劫持的方式，重写了数组的方法(对数组进行了原型链重写，指向自定义的原型方法)。当调用数组 api 时，可以通知依赖更新。如果数组中包含着引用类型，会对数组中的引用类型再次进行监控。
+
+流程如下:
+![An image](./images/vue2-reactive2.png)
+
+```js
+class Observer {
+  constructor (value) {
+    this.value = value
+    this.dep = new Dep()
+    if (Array.isArray(value)) { // 数组
+      protoAugment(value, arrayMethods)
+      this.observeArray(value)
+    } else {...}
+  }
+
+  observeArray (items: Array<any>) {
+    for (let i = 0, l = items.length; i < l; i++) {
+      observe(items[i])
+    }
+  }
+}
+
+function protoAugment (target, src) {
+  target.__proto__ = src
+}
+
+const arrayProto = Array.prototype
+const arrayMethods = Object.create(arrayProto)
+
+const methodsToPatch = ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse']
+
+methodsToPatch.forEach(function (method) {
+  const original = arrayProto[method]
+  def(arrayMethods, method, function mutator (...args) {
+    const result = original.apply(this, args)
+    const ob = this.__ob__
+    let inserted
+    switch (method) {
+      case 'push':
+      case 'unshift':
+        inserted = args
+        break
+      case 'splice':
+        inserted = args.slice(2)
+        break
+    }
+    if (inserted) ob.observeArray(inserted)
+    ob.dep.notify()
+    return result
+  })
+})
+
+// def
+function def (obj, key, val, enumerable) {
+  Object.defineProperty(obj, key, {
+    value: val,
+    enumerable: !!enumerable,
+    writable: true,
+    configurable: true
+  })
+}
+```
+## 插槽实现原理及使用场景？
+> 可以让用户更好的对组件进行扩展和定制化，利用 slot 占位，在使用组件时，组件标签内部内容会分发到对应的 slot 中。
+
+插槽分类及原理: 
+- 1、具名插槽(默认插槽)
+> 原理: 普通插槽是在父组件渲染完毕后，直接替换掉子组件中的slot占位符，本质是**替换**。
+
+```vue
+// 组件内插槽代码
+<div>
+  <slot name="header"></slot>
+  <slot name="content"></slot>
+</div>
+
+// 编译结果如下
+function render() {
+  with(this) {
+    return _c('div', [_t("header"), _t("content")], 2)
+  }
+}
+
+// 组件使用
+<Comp>
+  <h1 slot="header">header</h1>
+  <div slot="content">content</div>
+</Comp>
+
+// 编译结果如下
+function render() {
+  with(this) {
+    return _c('Comp', [
+      _c('h1', { attrs: { "slot": "header" }, slot: "header" }, [_v("header")]),
+      _c('div', { attrs: { "slot": "content" }, slot: "content" }, [_v("content")])])
+  }
+}
+```
+- 2、作用域插槽
+> 原理: 把父组件渲染内容编译成函数，子组件会调用该函数并传递数据，用函数的返回值替换 slot 占位符。作用域插槽可以向父级传递数据，拿到数据后再渲染对应内容。
+```vue
+// 组件内插槽代码
+<div><slot :data="{ header: 'header', content: 'content' }"></slot></div>
+
+// 编译结果如下
+function render() {
+  with(this) {
+    return _c('div', [_t("default", null, {
+      "data": { header: 'header', content: 'content' }
+    })], 2)
+  }
+}
+
+// 组件使用
+<Comp>
+  <template v-slot="{ data }">
+    <h1>{{ data.header }}</h1>
+    <div>{{ data.content }}</div>
+  </template>
+</Comp>
+
+// 编译结果如下
+function render() {
+  with(this) {
+    return _c('Comp', {
+      scopedSlots: _u([{
+        key: "default", fn: function ({ data }) {
+          return [_c('h1', [_v(_s(data.header))]), _c('div', [_v(
+            _s(data.content))])]
+        }
+      }])
+    })
+  }
+}
+```
+## 双向绑定的实现原理？
+> 双向绑定靠的是v-model指令，是 value + input 的语法糖(不严谨)
+- 1、表单元素:
+
+根据不同的标签解析出不同的语法，并且有额外的处理逻辑: 文本框(value+input)，复选框(checked+change)
+```vue
+<input v-model="val" />
+// 编译结果如下: 会被解析成指令
+function render() {
+  with(this) {
+    return _c('input', {
+      directives: [{ name: "model", rawName: "v-model", value: (val), expression: "val" }],
+      domProps: { "value": (val) },
+      on: {
+        "input": function ($event) {
+          if ($event.target.composing) return; // 处理中文输入的问题
+          val = $event.target.value
+        }
+      }
+    })
+  }
+}
+```
+- 2、组件:
+> 对组件而言 v-model 就是 value + input 的语法糖，用于组件中数组的双向绑定。属性名可以修改(通过model属性)
+```vue
+Vue.component('test', {
+ model: { prop: 'checked', event: 'change' }
+})
+```
+- 3、sync 修饰符的原理:
+> v-model默认只能双向绑定一个属性，.sync修饰符可以绑定多个属性。vue3中.sync语法被移除。
+```vue
+<Comp :value.sync="val" :a.sync="a"/>
+// 编译结果如下:
+function render() {
+  with(this) {
+    return _c('Comp', {
+      attrs: { "value": val,  "a": a },
+      on: {
+        "update:value": function ($event) {
+          val = $event
+        },
+        "update:a": function ($event) {
+          a = $event
+        }
+      }
+    })
+  }
+}
+```
+## 自定义指令的的应用场景?
+> 将操作 DOM 的逻辑进行复用。用户提前写好方法，元素被创建时会依次执行这些方法。
+
+![An image](./images/directive.png)
+
+常见指令编写: v-loading、v-lazy、v-debounce、v-has、v-draggable、v-click-outside
+
+## keep-alive使用场景?
+
+![An image](./images/keep-alive.png)
+
+源码如下:
+```js
+function matches (pattern: string | RegExp | Array<string>, name: string): boolean {
+  if (Array.isArray(pattern)) {
+    return pattern.indexOf(name) > -1
+  } else if (typeof pattern === 'string') {
+    return pattern.split(',').indexOf(name) > -1
+  } else if (isRegExp(pattern)) {
+    return pattern.test(name)
+  }
+
+  return false
+}
+
+function pruneCacheEntry (cache, key, keys, current) {
+  const cached = cache[key]
+  if (cached && (!current || cached.tag !== current.tag)) {
+    cached.componentInstance.$destroy()
+  }
+  cache[key] = null
+  remove(keys, key)
+}
+
+const patternTypes: Array<Function> = [String, RegExp, Array]
+
+export default {
+  name: 'keep-alive',
+  abstract: true,
+
+  props: {
+    include: patternTypes,
+    exclude: patternTypes,
+    max: [String, Number]
+  },
+
+  created () {
+    this.cache = Object.create(null)
+    this.keys = []
+  },
+
+  destroyed () {
+    for (const key in this.cache) {
+      pruneCacheEntry(this.cache, key, this.keys)
+    }
+  },
+
+  mounted () {
+    this.$watch('include', val => {
+      pruneCache(this, name => matches(val, name))
+    })
+    this.$watch('exclude', val => {
+      pruneCache(this, name => !matches(val, name))
+    })
+  },
+
+  render () {
+    const slot = this.$slots.default
+    const vnode: VNode = getFirstComponentChild(slot)
+    const componentOptions: ?VNodeComponentOptions = vnode && vnode.componentOptions
+    if (componentOptions) {
+      const name: ?string = getComponentName(componentOptions)
+      const { include, exclude } = this
+      if (
+        // not included
+        (include && (!name || !matches(include, name))) ||
+        // excluded
+        (exclude && name && matches(exclude, name))
+      ) {
+        return vnode
+      }
+
+      const { cache, keys } = this
+      const key: ?string = vnode.key == null
+        // same constructor may get registered as different local components
+        // so cid alone is not enough (#3269)
+        ? componentOptions.Ctor.cid + (componentOptions.tag ? `::${componentOptions.tag}` : '')
+        : vnode.key
+      if (cache[key]) {
+        vnode.componentInstance = cache[key].componentInstance
+        // make current key freshest
+        remove(keys, key)
+        keys.push(key)
+      } else {
+        cache[key] = vnode
+        keys.push(key)
+        // prune oldest entry
+        if (this.max && keys.length > parseInt(this.max)) {
+          pruneCacheEntry(cache, keys[0], keys, this._vnode)
+        }
+      }
+
+      vnode.data.keepAlive = true
+    }
+    return vnode || (slot && slot[0])
+  }
+}
+```
+[源码链接](https://dingqiangqiang.github.io/vue/extend/keep-alive.html)
+
+[LRU算法实现](https://blog.csdn.net/weixin_51431277/article/details/129939296)
+
+![An image](./images/keep-alive2.png)
+## nextTick 实现原理?
+> 在下次 DOM 更新循环结束之后执行延迟回调。在修改数据之后立即使用这个方法，获取更新后的 DOM。
+
+![An image](./images/nextTick.png)
+
+[源码链接](https://dingqiangqiang.github.io/vue/reactive/next-tick.html)
+## Vue 中的设计模式?
+
+![An image](./images/design-mode.png)
+## Vue 中的性能优化?
+
+![An image](./images/performance.png)
+## 单页应用首屏加载速度慢的解决方案?
+
+![An image](./images/optimization.png)
+## 项目中如何解决跨域？
+
+![An image](./images/cross-domain.png)
+
+websocket无跨域问题
+## axios 封装
+
+![An image](./images/axios.png)
 ## 权限校验(菜单、按钮)
+
+![An image](./images/permission.png)
+## Vue-Router 钩子函数及执行流程
+[完整的导航解析流程](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html)
+
+- 1、导航被触发。
+- 2、在失活的组件里调用 `beforeRouteLeave` 守卫。
+- 3、调用全局的 `beforeEach` 守卫。
+- 4、在重用的组件里调用 `beforeRouteUpdate` 守卫(2.2+)。
+- 5、在路由配置里调用 `beforeEnter`。
+- 6、解析异步路由组件。
+- 7、在被激活的组件里调用 `beforeRouteEnter`。
+- 8、调用全局的 `beforeResolve` 守卫(2.5+)。
+- 9、导航被确认。
+- 10、调用全局的 `afterEach` 钩子。
+- 11、触发 DOM 更新。
+- 12、调用 `beforeRouteEnter` 守卫中传给 next 的回调函数，创建好的组件实例会作为回调函数的参数传入。
+
+代码如下
+```js
+const queue: Array<?NavigationGuard> = [].concat(
+  extractLeaveGuards(deactivated),
+  this.router.beforeHooks,
+  extractUpdateHooks(updated),
+  activated.map(m => m.beforeEnter),
+  resolveAsyncComponents(activated)
+)
+
+runQueue(queue, iterator, () => {
+  ...
+  const enterGuards = extractEnterGuards(activated, postEnterCbs, isValid)
+  const queue = enterGuards.concat(this.router.resolveHooks)
+  runQueue(queue, iterator, () => {
+    ...
+    onComplete(route)
+    if (this.router.app) {
+      this.router.app.$nextTick(() => {
+        postEnterCbs.forEach(cb => { cb() })
+      })
+    }
+  })
+})
+```
+## Vue-Router 几种模式的区别?
+
+![An image](./images/router-mode.png)
+
+hash模式:
+
+![An image](./images/hash.png)
+
+history模式:
+
+![An image](./images/history.png)
+
+## 项目部署到服务器报 404?
+> history 模式刷新时会向服务端发起请求，服务端无法响应到对应的资源，所以出现了 404。
+
+解决方案: 服务端返回项目首页，浏览器接收后，会根据路径匹配到对应组件进行渲染。
+
+[服务器配置示例](https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B)
+## 对 Vuex 的理解
+> 专为 Vue.js 应用程序开发的状态管理模式。采用集中式存储管理应用的所有组件的状态，并以相应的规则保证状态以一种可预测的方式发生变化。
+
+::: tip 原理
+vuex3: 通过 new Vue() 创建 vue 实例，进行数据共享
+
+vuex4: 通过 reactive 创建响应式对象进行数据共享
+:::
+运作流程:
+![An image](./images/vuex.png)
+
+修改状态的方式:
+- 1、组件中 commit -> mutation -> 修改 state
+
+- 2、组件中 dispatch -> action(封装公共逻辑，解决复用问题) -> commit -> mutation -> 修改 state
+
+缺陷:
+
+![An image](./images/vuex2.png)
+## 如何监听 vuex 中的数据变化?
+- 1、watch
+
+- 2、store.subscribe
+
+源码如下
+```js
+class Store {
+  constructor (options = {}) {
+    ...
+    this._subscribers = []
+  }
+
+  subscribe (fn) {
+    return genericSubscribe(fn, this._subscribers)
+  }
+
+  commit (_type, _payload, _options) {
+    ...
+    this._subscribers.forEach(sub => sub(mutation, this.state))
+  }
+}
+
+function genericSubscribe (fn, subs) {
+  if (subs.indexOf(fn) < 0) {
+    subs.push(fn)
+  }
+  return () => {
+    const i = subs.indexOf(fn)
+    if (i > -1) {
+      subs.splice(i, 1)
+    }
+  }
+}
+```
