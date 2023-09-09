@@ -1,13 +1,17 @@
 ---
 layout: home
 
+title: StriveDocs
+titleTemplate: 一站式前端内容网站，包括学习路线、知识体系
+
 hero:
-  name: Strive blog
-  text: 积跬步以至千里
-  tagline: 前端技术博客
-  # image:
-    # src: /logo.svg
-    # alt: logo
+  name: StriveDocs
+  text: "Front-end learning document collection"
+  tagline: |
+    一站式前端内容网站，包括学习路线、知识体系
+  image:
+    src: /it.svg
+    alt: StriveDocs
   actions:
   #   - theme: brand
   #     text: 组件库
@@ -27,19 +31,30 @@ features:
     title: 从零搭建组件库
     details: 基于 vue3 + vite + ts
     link: /component-library/guide
+    linkText: 开始学习
   - icon: 🔩
     title: 脚手架技术揭秘 
     details: 基于 vue-cli
     link: https://dingqiangqiang.github.io/vue-cli/01.html
+    linkText: 开始学习
   - icon: 📦
     title: 构建工具
     details: vite、webpack、rollup
     link: /structure/vite/
-  - icon: 📝
-    title: 数据结构与算法
+    linkText: 开始阅读
+  - icon: 📓
+    title: 前端算法
+    details: 不再畏惧面试算法，提供刷题路线。
+    link: /algorithm/tree
+    linkText: 开始刷题
+  - icon: ✏️
+    title: 备忘录
+    details: 将日常工作中遇到的问题做一份备忘录，方便查阅。
+    link: /develop-summary/string
+    linkText: 开始查阅
 ---
 
-<style>
+<!-- <style>
   :root {
     --vp-home-hero-name-color: transparent;
     --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #bd34fe, #41d1ff);
@@ -57,4 +72,4 @@ features:
     --vp-c-gray-dark-2: #484848;
     --vp-c-gray-dark-3: #3a3a3a
   }
-</style>
+</style> -->

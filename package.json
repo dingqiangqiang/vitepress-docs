@@ -1,7 +1,7 @@
 {
   "name": "vitepress-starter",
   "version": "1.0.0",
-  "description": "",
+  "description": "前端技术博客",
   "main": "index.js",
   "scripts": {
     "docs:dev": "vitepress dev docs",
@@ -10,10 +10,10 @@
     "deploy": "sh deploy.sh"
   },
   "keywords": [],
-  "author": "",
+  "author": "qiangqiang",
   "license": "ISC",
   "devDependencies": {
-    "vitepress": "1.0.0-alpha.49",
+    "vitepress": "^1.0.0-beta.6",
     "vue": "^3.2.47"
   }
 }

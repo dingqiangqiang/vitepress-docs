@@ -2,9 +2,10 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   base: '/docs/',
-  title: '前端乐园',
-  description: 'Vite & Vue powered static site generator.',
-  appearance: true,
+  title: 'StriveDocs',
+  // outDir: '../dist',
+  description: '一站式前端内容网站，包括学习路线、知识体系，海量前端面试问题解答，一站式阅读体验，跟随前沿技术，深度和广度学习，React 与 Vue 生态。',
+  appearance: 'dark',
   ignoreDeadLinks: true,
   lang: 'zh-CN',
   lastUpdated: true,
@@ -13,16 +14,35 @@ export default defineConfig({
     lineNumbers: true
   },
   head: [
-    ['link', { rel: 'icon', href: '/niumowang.jpeg'}]
+    ['link', { rel: 'icon', href: '/docs/favicon.ico' }]
   ],
+  
   // 主题配置
   themeConfig: {
-    logo: '/niumowang.jpeg',
+    logo: './logo.svg',
+    outline: 'deep',
+    docFooter: {
+      prev: '上一篇',
+      next: '下一篇',
+    },
+    returnToTopLabel: '返回顶部',
+    outlineTitle: '导航栏',
+    darkModeSwitchLabel: '外观',
+    sidebarMenuLabel: '归档',
+    editLink: {
+      pattern: 'https://gitee.com/ding1992/vitepress-starter/tree/master/docs/:path',
+      text: '在 Gitee 上编辑此页',
+    },
+    lastUpdatedText: '上次更新',
+    search: {
+      provider: 'local'
+    },
     nav: [
       { text: '组件库', link: '/component-library/guide'},
       { text: '脚手架', link: 'https://dingqiangqiang.github.io/vue-cli/01.html'},
-      { text: 'Vue.js 技术揭秘', link: 'https://dingqiangqiang.github.io/vue/guide/'},
+      { text: '🔥 Vue.js 技术揭秘', link: 'https://dingqiangqiang.github.io/vue/guide/'},
       { text: 'React', link: '/react/hooks'},
+      { text: '⭐ 小程序', link: '/mini-program/'},
       {
         text: '前端进阶',
         items: [
@@ -74,9 +94,20 @@ export default defineConfig({
           }
         ]
       },
-      { text: '开发汇总', link: '/develop-summary/string'},
+      { text: '备忘录', link: '/develop-summary/string'},
     ],
     sidebar: {
+      '/mini-program/': [
+        { 
+          text: '常用功能',
+          items: [
+            {
+              text: '左滑删除',
+              link: '/mini-program/'
+            }
+          ]
+        }
+      ],
       '/react/': [
         {
           text: '常用语法',
@@ -146,6 +177,7 @@ export default defineConfig({
       '/vue/': [
         {
           text: 'Vue 专栏',
+          collapsed: false,
           items: [
             {
               text: '一文看懂 Vue.js 3.0 的优化',
@@ -178,6 +210,10 @@ export default defineConfig({
             {
               text: '大杂脍',
               link: '/vue/interview'
+            },
+            {
+              text: '工具函数盘点',
+              link: '/vue/util'
             }
           ]
         }
@@ -208,6 +244,7 @@ export default defineConfig({
       '/structure/': [
         {
           text: 'vite',
+          collapsed: false,
           items: [
             {
               text: '从零搭建 vite 开发环境(上)',
@@ -221,6 +258,7 @@ export default defineConfig({
         },
         {
           text: 'webpack',
+          collapsed: false,
           items: [
             {
               text: '配置',
@@ -250,6 +288,7 @@ export default defineConfig({
         },
         {
           text: 'rollup',
+          collapsed: false,
           items: [
             {
               text: '一文看懂 rollup',

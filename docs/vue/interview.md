@@ -971,3 +971,89 @@ function genericSubscribe (fn, subs) {
   }
 }
 ```
+## 如何将 template 编译成 render 函数
+> 虚拟 DOM 用来描述真实DOM，抽象语法树描述语法本身
+
+![An image](./images/compiler3.png)
+```vue
+// vue2
+import Vue from 'vue/dist/vue.esm'
+
+Vue.compile('<div></div>')
+// vue3
+import { createApp, compile } feom 'vue/dist/vue.esm-bundler.js'
+
+compile('<div></div>')
+```
+## diff 算法
+> 深度优先、同级比较
+
+[点我跳转](/vue/diff.html)
+## key 的作用和原理
+
+- 概念
+
+  ![An image](./images/key.png)
+
+- 作用
+
+  ![An image](./images/key2.png)
+- demo
+  ![An image](./images/key-demo.png)
+## 常用修饰符
+
+![An image](./images/modifier.png)
+## 递归组件
+```vue
+<template>
+  <el-menu>
+    <sidebar-item v-for="route in xxx" :key="route.path" :item="route" />
+  </el-menu>
+</template>
+
+<script>
+import SidebarItem from './SidebarItem'
+
+export default {
+  components: { SidebarItem }
+}
+</script>
+
+// SidebarItem.vue
+<template>
+  <div v-if="!item.hidden">
+    <template v-if="...">
+      <el-menu-item :index="...">
+        <item :title="xxx" />
+      </el-menu-item>
+    </template>
+
+    <el-submenu v-else :index="xxx">
+      <template slot="title">
+        <span slot='title'>{{ item.title }} </span>
+      </template>
+      <sidebar-item
+        v-for="child in item.children" :key="child.path" :item="child" />
+    </el-submenu>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'SidebarItem',
+  props: {
+    item: {
+      type: Object,
+      required: true
+    }
+  }
+}
+</script>
+```
+- 2、jsx 语法 
+
+![An image](./images/jsx.png)
+## 异步组件
+> 原理: 默认渲染异步占位符节点，组件加载完毕后调用 $forceUpdate 强制更新，渲染加载完毕后的组件
+ 
+
