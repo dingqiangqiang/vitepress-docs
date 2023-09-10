@@ -4,7 +4,7 @@ export default defineConfig({
   base: '/docs/',
   title: 'StriveDocs',
   // outDir: '../dist',
-  description: '一站式前端内容网站，包括学习路线、知识体系，海量前端面试问题解答，一站式阅读体验，跟随前沿技术，深度和广度学习，React 与 Vue 生态。',
+  description: '前端技术博客',
   appearance: 'dark',
   ignoreDeadLinks: true,
   lang: 'zh-CN',
@@ -38,14 +38,14 @@ export default defineConfig({
       provider: 'local'
     },
     nav: [
-      { text: '组件库', link: '/component-library/guide'},
-      { text: '脚手架', link: 'https://dingqiangqiang.github.io/vue-cli/01.html'},
       { text: '🔥 Vue.js 技术揭秘', link: 'https://dingqiangqiang.github.io/vue/guide/'},
       { text: 'React', link: '/react/hooks'},
       { text: '⭐ 小程序', link: '/mini-program/'},
       {
         text: '前端进阶',
         items: [
+          { text: '组件库', link: '/component-library/guide'},
+          { text: '脚手架', link: 'https://dingqiangqiang.github.io/vue-cli/01.html'},
           { 
             text: 'Typescript', 
             link: '/typescript/api'
@@ -94,9 +94,18 @@ export default defineConfig({
           }
         ]
       },
-      { text: '备忘录', link: '/develop-summary/string'},
+      { text: '📝 备忘录', link: '/develop-summary/string'},
     ],
     sidebar: {
+      '/': [
+        {
+          text: '开始阅读',
+          collapsed: false,
+          items: [
+            { text: '阅读须知', link: '/guide' }
+          ],
+        }
+      ],
       '/mini-program/': [
         { 
           text: '常用功能',

@@ -2,24 +2,21 @@
 layout: home
 
 title: StriveDocs
-titleTemplate: 一站式前端内容网站，包括学习路线、知识体系
+titleTemplate: 前端技术博客
 
 hero:
   name: StriveDocs
   text: "Front-end learning document collection"
   tagline: |
-    一站式前端内容网站，包括学习路线、知识体系
+    前端技术博客
   image:
     src: /it.svg
     alt: StriveDocs
   actions:
-  #   - theme: brand
-  #     text: 组件库
-  #     link: /component-library/guide
-  #   - theme: brand
-  #     text: 脚手架
-  #     link: https://dingqiangqiang.github.io/vue-cli/01.html
     - theme: brand
+      text: 开始阅读
+      link: /guide
+    - theme: alt
       text: vue 专栏
       link: /vue/optimize
     - theme: alt
@@ -27,21 +24,11 @@ hero:
       link: https://dingqiangqiang.github.io/
 
 features:
-  - icon: 🛠️
-    title: 从零搭建组件库
-    details: 基于 vue3 + vite + ts
+  - icon: 🎉
+    title: 技术视野
+    details: 跟随前沿技术，深度和广度学习。
     link: /component-library/guide
     linkText: 开始学习
-  - icon: 🔩
-    title: 脚手架技术揭秘 
-    details: 基于 vue-cli
-    link: https://dingqiangqiang.github.io/vue-cli/01.html
-    linkText: 开始学习
-  - icon: 📦
-    title: 构建工具
-    details: vite、webpack、rollup
-    link: /structure/vite/
-    linkText: 开始阅读
   - icon: 📓
     title: 前端算法
     details: 不再畏惧面试算法，提供刷题路线。

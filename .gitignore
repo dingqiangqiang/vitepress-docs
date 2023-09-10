@@ -1,5 +1,9 @@
-.idea/
 node_modules
+.idea/
+.temp
+.vscode
 dist
+docs/.vitepress/cache
+cache
 example/
 .DS_Store

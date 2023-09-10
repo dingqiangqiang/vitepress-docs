@@ -4,16 +4,19 @@
   "description": "前端技术博客",
   "main": "index.js",
   "scripts": {
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs",
+    "dev": "vitepress dev docs --port 1234 --max-old-space-size=50000",
+    "build": "vitepress build docs",
+    "serve": "vitepress serve docs",
+    "preview": "vitepress preview docs",
     "deploy": "sh deploy.sh"
   },
   "keywords": [],
   "author": "qiangqiang",
   "license": "ISC",
   "devDependencies": {
+    "typescript": "^5.0.4",
     "vitepress": "^1.0.0-beta.6",
-    "vue": "^3.2.47"
+    "vue": "^3.2.47",
+    "medium-zoom": "^1.0.8"
   }
 }
