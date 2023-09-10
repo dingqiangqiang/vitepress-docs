@@ -37,6 +37,17 @@ export default defineConfig({
     search: {
       provider: 'local'
     },
+    // algolia: {
+    //   appId: 'RHX6KGJ4PT',
+    //   apiKey: '9ccfcfff5b8b2ca6318229be055a524b',
+    //   indexName: 'chocn',
+    //   placeholder: '请输入关键词',
+    //   translations: {
+    //     button: {
+    //       buttonText: '搜索文档',
+    //     }
+    //   }
+    // },
     nav: [
       { text: '🔥 Vue.js 技术揭秘', link: 'https://dingqiangqiang.github.io/vue/guide/'},
       { text: 'React', link: '/react/hooks'},
@@ -47,7 +58,7 @@ export default defineConfig({
           { text: '组件库', link: '/component-library/guide'},
           { text: '脚手架', link: 'https://dingqiangqiang.github.io/vue-cli/01.html'},
           { 
-            text: 'Typescript', 
+            text: 'TS', 
             link: '/typescript/api'
           },
           { 
@@ -104,15 +115,47 @@ export default defineConfig({
           items: [
             { text: '阅读须知', link: '/guide' }
           ],
+        },
+        {
+          text: '🍏 Turf',
+          collapsed: false,
+          items: [
+            { text: '常用工具函数', link: '/turf/' },
+          ],
+        },
+        {
+          text: '🍎 VitePress',
+          collapsed: false,
+          items: [
+            { text: '常用配置', link: '/vitepress/' },
+          ],
+        },
+        {
+          text: '🔥 Electron',
+          collapsed: false,
+          items: [
+            { text: '起步', link: '/electron/' },
+          ],
         }
       ],
       '/mini-program/': [
         { 
           text: '常用功能',
+          collapsed: false,
           items: [
             {
               text: '左滑删除',
               link: '/mini-program/'
+            }
+          ]
+        },
+        { 
+          text: '框架',
+          collapsed: false,
+          items: [
+            {
+              text: 'mpx',
+              link: '/mini-program/mpx/'
             }
           ]
         }
@@ -223,6 +266,10 @@ export default defineConfig({
             {
               text: '工具函数盘点',
               link: '/vue/util'
+            },
+            {
+              text: 'jsx',
+              link: '/vue/jsx'
             }
           ]
         }

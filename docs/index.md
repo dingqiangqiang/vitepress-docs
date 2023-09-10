@@ -27,7 +27,7 @@ features:
   - icon: 🎉
     title: 技术视野
     details: 跟随前沿技术，深度和广度学习。
-    link: /component-library/guide
+    link: /structure/vite/
     linkText: 开始学习
   - icon: 📓
     title: 前端算法
