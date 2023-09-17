@@ -30,9 +30,9 @@ features:
     link: /structure/vite/
     linkText: 开始学习
   - icon: 📓
-    title: 前端算法
-    details: 不再畏惧面试算法，提供刷题路线。
-    link: /algorithm/tree
+    title: 前端面试
+    details: 不再畏惧前端面试，自我总结沉淀。
+    link: /algorithm/bfc
     linkText: 开始刷题
   - icon: ✏️
     title: 备忘录

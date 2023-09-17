@@ -372,7 +372,30 @@ export default defineConfig({
       ],
       '/algorithm/': [
         {
+          text: 'CSS 核心概念',
+          collapsed: false,
+          items: [
+            {
+              text: 'BFC 及应用场景',
+              link: '/algorithm/bfc'
+            },
+            {
+              text: '自适应三列布局',
+              link: '/algorithm/layout'
+            },
+            {
+              text: 'flex 布局 && grid 布局',
+              link: '/algorithm/flex-grid'
+            },
+            {
+              text: '其它',
+              link: '/algorithm/other-css'
+            }
+          ]
+        },
+        {
           text: '数据结构与算法',
+          collapsed: false,
           items: [
             {
               text: '树',
