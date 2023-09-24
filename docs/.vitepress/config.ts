@@ -51,7 +51,7 @@ export default defineConfig({
     nav: [
       { text: '🔥 Vue.js 技术揭秘', link: 'https://dingqiangqiang.github.io/vue/guide/'},
       { text: 'React', link: '/react/hooks'},
-      { text: '⭐ 小程序', link: '/mini-program/'},
+      { text: '⭐ 小程序', link: '/mini-program/design'},
       {
         text: '前端进阶',
         items: [
@@ -140,22 +140,25 @@ export default defineConfig({
       ],
       '/mini-program/': [
         { 
-          text: '常用功能',
-          collapsed: false,
+          text: '原理篇',
           items: [
             {
-              text: '左滑删除',
-              link: '/mini-program/'
+              text: '小程序底层设计',
+              link: '/mini-program/design'
             }
           ]
         },
         { 
-          text: '框架',
-          collapsed: false,
+          text: '应用篇',
+          collapsed: true,
           items: [
             {
-              text: 'mpx',
-              link: '/mini-program/mpx/'
+              text: '场景梳理',
+              link: '/mini-program/'
+            },
+            {
+              text: '疑难杂症',
+              link: '/mini-program/difficulty'
             }
           ]
         }
