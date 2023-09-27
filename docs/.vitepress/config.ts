@@ -124,6 +124,14 @@ export default defineConfig({
           ],
         },
         {
+          text: '安全',
+          collapsed: false,
+          items: [
+            { text: 'CSRF', link: '/secure/csrf' },
+            { text: 'XSS', link: '/secure/xss' },
+          ]
+        },
+        {
           text: '🍎 VitePress',
           collapsed: false,
           items: [
@@ -143,7 +151,7 @@ export default defineConfig({
           text: '原理篇',
           items: [
             {
-              text: '小程序底层设计',
+              text: '底层实现',
               link: '/mini-program/design'
             }
           ]
