@@ -439,6 +439,14 @@ export default defineConfig({
         {
           text: '跨域',
           link: '/develop-summary/cross-domain'
+        },
+        {
+          text: 'bignumber',
+          link: '/develop-summary/bignumber'
+        },
+        {
+          text: '分享: 框架中的插件机制',
+          link: '/develop-summary/plugin'
         }
       ],
       '/node/': [

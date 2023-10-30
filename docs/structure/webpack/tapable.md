@@ -1,4 +1,6 @@
 # tapable
+[官网链接](https://github.com/webpack/tapable)
+
 `tapable` 是一个类似于 `EventEmitter` 的库, 主要控制钩子函数的发布与订阅，控制着 `webpack` 的插件系统。
 
 `tapable` 暴露了很多 `Hook`(钩子)类，为插件提供挂载的钩子
@@ -31,7 +33,7 @@ const {
 } = require("tapable")
 ```
 
-`new` 类方法获得我们需要的钩子，参数可传可不传
+`new` 一个类方法获得我们需要的钩子，参数可传可不传
 ## 钩子的绑定与执行
 `tapable` 提供了同步、异步绑定钩子的方法，并且他们都有绑定事件和执行事件对应的方法。    
 | 类型            |      绑定                |  执行 |
