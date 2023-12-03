@@ -271,6 +271,10 @@ export default defineConfig({
               link: '/vue/components'
             },
             {
+              text: '自定义指令封装',
+              link: '/vue/directives'
+            },
+            {
               text: '大杂脍',
               link: '/vue/interview'
             },
@@ -443,6 +447,10 @@ export default defineConfig({
         {
           text: 'bignumber',
           link: '/develop-summary/bignumber'
+        },
+        {
+          text: '开发技术汇总',
+          link: '/develop-summary/tips'
         },
         {
           text: '分享: 框架中的插件机制',
