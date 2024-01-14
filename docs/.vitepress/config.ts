@@ -155,21 +155,21 @@ export default defineConfig({
               link: '/mini-program/design'
             }
           ]
-        },
-        { 
-          text: '应用篇',
-          collapsed: true,
-          items: [
-            {
-              text: '场景梳理',
-              link: '/mini-program/'
-            },
-            {
-              text: '疑难杂症',
-              link: '/mini-program/difficulty'
-            }
-          ]
         }
+        // { 
+        //   text: '应用篇',
+        //   collapsed: true,
+        //   items: [
+        //     {
+        //       text: '场景梳理',
+        //       link: '/mini-program/'
+        //     },
+        //     {
+        //       text: '技术攻坚',
+        //       link: '/mini-program/difficulty'
+        //     }
+        //   ]
+        // }
       ],
       '/react/': [
         {
