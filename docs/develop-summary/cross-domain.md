@@ -248,3 +248,13 @@ app.get('/getData',function (req,res) {
   res.end("cors")
 })
 ```
+
+## 浏览器禁止跨域
+
+命令行输入如下指令: 
+
+```sh
+open -n /Applications/Google\ Chrome.app/ --args --disable-web-security  --disable-gpu  --user-data-dir=/Users/didi/Documents/MyChromeDevUserData
+```
+
+注: --user-data-dir 是 Chrome 浏览器的安装路径

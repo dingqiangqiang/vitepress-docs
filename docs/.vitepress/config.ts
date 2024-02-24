@@ -49,14 +49,16 @@ export default defineConfig({
     //   }
     // },
     nav: [
-      { text: '🔥 Vue.js 技术揭秘', link: 'https://dingqiangqiang.github.io/vue/guide/'},
+      // { text: '🔥 Vue.js 技术揭秘', link: 'https://dingqiangqiang.github.io/vue/guide/'},
+      { text: '🔥 Vue.js 技术揭秘', link: '/analysis/guide/'},
       { text: 'React', link: '/react/hooks'},
       { text: '⭐ 小程序', link: '/mini-program/design'},
       {
         text: '前端进阶',
         items: [
+          { text: 'Axios 源码解析', link: '/axios/01'},
           { text: '组件库', link: '/component-library/guide'},
-          { text: '脚手架', link: 'https://dingqiangqiang.github.io/vue-cli/01.html'},
+          { text: '脚手架', link: '/vue-cli/01'},
           { 
             text: 'TS', 
             link: '/typescript/api'
@@ -123,28 +125,36 @@ export default defineConfig({
             { text: '常用工具函数', link: '/turf/' },
           ],
         },
+        // {
+        //   text: '安全',
+        //   collapsed: false,
+        //   items: [
+        //     { text: 'CSRF', link: '/secure/csrf' },
+        //     { text: 'XSS', link: '/secure/xss' },
+        //   ]
+        // },
+        // {
+        //   text: '🍎 VitePress',
+        //   collapsed: false,
+        //   items: [
+        //     { text: '常用配置', link: '/vitepress/' },
+        //   ],
+        // },
         {
-          text: '安全',
-          collapsed: false,
+          text: '🔥 每日一记',
+          collapsed: true,
           items: [
-            { text: 'CSRF', link: '/secure/csrf' },
-            { text: 'XSS', link: '/secure/xss' },
-          ]
-        },
-        {
-          text: '🍎 VitePress',
-          collapsed: false,
-          items: [
-            { text: '常用配置', link: '/vitepress/' },
+            { text: '01-20 关于 import type 的理解', link: '/dailyNote/type' },
+            { text: '01-21 Vue3 项目搭建', link: '/dailyNote/project' }
           ],
         },
-        {
-          text: '🔥 Electron',
-          collapsed: false,
-          items: [
-            { text: '起步', link: '/electron/' },
-          ],
-        }
+        // {
+        //   text: '🔥 Electron',
+        //   collapsed: false,
+        //   items: [
+        //     { text: '起步', link: '/electron/' },
+        //   ],
+        // }
       ],
       '/mini-program/': [
         { 
@@ -237,6 +247,31 @@ export default defineConfig({
           ]
         }
       ],
+      '/axios/': [
+        {  
+          text: '介绍',
+          items: [
+            { text: '介绍', link: '/axios/01'},
+            { text: '入口', link: '/axios/02'},
+            { text: '拦截器', link: '/axios/03'},
+            { text: '合并配置', link: '/axios/04'},
+            { text: 'dispatchRequest', link: '/axios/05'},
+            { text: 'xhr', link: '/axios/06'},
+            { text: '取消请求', link: '/axios/07'},
+            { text: '错误处理', link: '/axios/08'}
+          ]
+        },
+      ],
+      '/vue-cli/': [
+        {
+          text: 'vue-cli 技术揭秘',
+          items: [
+            { text: '入口', link: '/vue-cli/01'},
+            { text: '项目生成', link: '/vue-cli/02'},
+            { text: '第三方依赖包', link: '/vue-cli/03'}
+          ],
+        }
+      ],
       '/vue/': [
         {
           text: 'Vue 专栏',
@@ -288,6 +323,266 @@ export default defineConfig({
             }
           ]
         }
+      ],
+      '/analysis/': [
+        {  
+          text: '介绍',
+          items: [
+            {
+              text: 'Introduction',
+              link: '/analysis/guide/'
+            }
+          ]
+        },
+        {
+          text: '准备工作',
+          items: [
+            {
+              text: 'Introduction',
+              link: '/analysis/prepare/introduction'
+            },
+            {
+              text: '认识 Flow',
+              link: '/analysis/prepare/flow'
+            },
+            {
+              text: 'Vue.js 源码目录设计',
+              link: '/analysis/prepare/directory'
+            },
+            {
+              text: 'Vue.js 源码构建',
+              link: '/analysis/prepare/build'
+            },
+            {
+              text: '从入口开始',
+              link: '/analysis/prepare/entrance'
+            }
+          ]
+        },
+        {
+          text: '数据驱动',
+          items: [
+            {
+              text: 'Introduction',
+              link: '/analysis/data-driven/introduction'
+            },
+            {
+              text: 'new Vue 发生了什么',
+              link: '/analysis/data-driven/new-vue'
+            },
+            {
+              text: 'Vue 实例挂载的实现',
+              link: '/analysis/data-driven/mounted'
+            },
+            {
+              text: 'render',
+              link: '/analysis/data-driven/render'
+            },
+            {
+              text: 'Virtual DOM',
+              link: '/analysis/data-driven/virtual-dom'
+            },
+            {
+              text: 'createElement',
+              link: '/analysis/data-driven/create-element'
+            },
+            {
+              text: 'update',
+              link: '/analysis/data-driven/update'
+            }
+          ]
+        },
+        {
+          text: '组件化',
+          items: [
+            {
+              text: 'Introduction',
+              link: '/analysis/components/introduction'
+            },
+            {
+              text: 'createComponent',
+              link: '/analysis/components/create-component'
+            },
+            {
+              text: 'patch',
+              link: '/analysis/components/patch'
+            },
+            {
+              text: '合并配置',
+              link: '/analysis/components/merge-option'
+            },
+            {
+              text: '生命周期',
+              link: '/analysis/components/lifecycle'
+            },
+            {
+              text: '组件注册',
+              link: '/analysis/components/component-register'
+            },
+            {
+              text: '异步组件',
+              link: '/analysis/components/async-component'
+            }
+          ]
+        },
+        {
+          text: '深入响应式原理',
+          items: [
+            {
+              text: 'Introduction',
+              link: '/analysis/reactive/introduction'
+            },
+            {
+              text: '响应式对象',
+              link: '/analysis/reactive/reactive-object'
+            },
+            {
+              text: '依赖收集',
+              link: '/analysis/reactive/getters'
+            },
+            {
+              text: '派发更新',
+              link: '/analysis/reactive/setters'
+            },
+            {
+              text: 'nextTick',
+              link: '/analysis/reactive/next-tick'
+            },
+            {
+              text: '检测变化的注意事项',
+              link: '/analysis/reactive/questions'
+            },
+            {
+              text: '计算属性 VS 侦听属性',
+              link: '/analysis/reactive/computed-watcher'
+            },
+            {
+              text: '组件更新',
+              link: '/analysis/reactive/component-update'
+            },
+            {
+              text: 'Props (v2.6.11)',
+              link: '/analysis/reactive/props'
+            },
+            {
+              text: '原理图',
+              link: '/analysis/reactive/summary'
+            }
+          ]
+        },
+        {
+          text: '编译',
+          items: [
+            {
+              text: 'Introduction',
+              link: '/analysis/compile/introduction'
+            },
+            {
+              text: '编译入口',
+              link: '/analysis/compile/entrance'
+            },
+            {
+              text: 'parse',
+              link: '/analysis/compile/parse'
+            },
+            {
+              text: 'optimize',
+              link: '/analysis/compile/optimize'
+            },
+            {
+              text: 'codegen',
+              link: '/analysis/compile/codegen'
+            },
+          ]
+        },
+        {
+          text: '扩展',
+          items: [
+            {
+              text: 'Introduction',
+              link: '/analysis/extend/introduction'
+            },
+            {
+              text: 'event',
+              link: '/analysis/extend/event'
+            },
+            {
+              text: 'v-model',
+              link: '/analysis/extend/v-model'
+            },
+            {
+              text: 'slot',
+              link: '/analysis/extend/slot'
+            },
+            {
+              text: 'keep-alive',
+              link: '/analysis/extend/keep-alive'
+            },
+            {
+              text: 'transition',
+              link: '/analysis/extend/transition'
+            },
+            {
+              text: 'transition-group',
+              link: '/analysis/extend/transition-group'
+            },
+          ]
+        },
+        {
+          text: 'Vue Router',
+          items: [
+            {
+              text: 'Introduction',
+              link: '/analysis/vue-router/introduction'
+            },
+            {
+              text: '路由注册',
+              link: '/analysis/vue-router/install'
+            },
+            {
+              text: 'VueRouter 对象',
+              link: '/analysis/vue-router/router'
+            },
+            {
+              text: 'matcher',
+              link: '/analysis/vue-router/matcher'
+            },
+            {
+              text: '路径切换',
+              link: '/analysis/vue-router/transition-to'
+            }
+          ]
+        },
+        {
+          text: 'Vuex',
+          items: [
+            {
+              text: 'Introduction',
+              link: '/analysis/vuex/introduction'
+            },
+            {
+              text: 'Vuex 初始化',
+              link: '/analysis/vuex/init'
+            },
+            {
+              text: 'API',
+              link: '/analysis/vuex/api'
+            },
+            {
+              text: ' 插件',
+              link: '/analysis/vuex/plugin'
+            }
+          ]
+        },
+        {
+          text: 'Pinia',
+          items: [
+            {
+              text: 'Introduction',
+              link: '/analysis/pinia/introduction'
+            }
+          ]
+        },
       ],
       '/test/': [
         {

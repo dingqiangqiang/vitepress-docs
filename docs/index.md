@@ -17,11 +17,11 @@ hero:
       text: 开始阅读
       link: /guide
     - theme: alt
-      text: vue 专栏
-      link: /vue/optimize
-    - theme: alt
       text: vuepress 站点
       link: https://dingqiangqiang.github.io/
+    - theme: alt
+      text: vue 专栏
+      link: /vue/optimize
 
 features:
   - icon: 🎉
