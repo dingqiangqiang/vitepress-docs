@@ -8,12 +8,12 @@
 
 方案: 气泡外层在包一层标签，标签高度写死，背景设置为透明，子元素底部对齐。
 ::: code-group
-```template
+```html
 <cover-view class="wrapper" style="{{ wrapperStyle }}">
  // 气泡内容
 </cover-view
 ```
-```script
+```vue
 computed: {
   wrapperStyle() {
     if (params.isBottomDir) { // 气泡偏移至在大头针下方
@@ -23,7 +23,7 @@ computed: {
   }
 }
 ```
-```style
+```css
 .wrapper {
   height: 40px
   background: transparent;
@@ -40,7 +40,7 @@ computed: {
 :::
 ::: details 获取自定义气泡宽高
 ::: code-group
-```template
+```html
 <map>
   <cover-view slot="callout">
     <block wx:for="{{ callouts }}" wx:key="markerId">
@@ -53,7 +53,7 @@ computed: {
   </cover-view>
 </map>
 ```
-```script
+```vue
 watch: {
   callouts: {
     deep: true,

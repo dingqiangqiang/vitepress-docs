@@ -246,6 +246,81 @@ getAndInvoke (cb: Function) {
 
 通过以上的分析，我们知道计算属性本质上就是一个 `computed watcher`，也了解了它的创建过程和被访问触发 getter 以及依赖更新的过程，其实这是最新的计算属性的实现，之所以这么设计是因为 Vue 想确保不仅仅是计算属性依赖的值发生变化，而是当计算属性最终计算的值发生变化才会触发渲染 `watcher` 重新渲染，本质上是一种优化。
 
+### 2.6.11 计算属性的实现方式
+
+首先是 createComputedGetter 的变化
+```js
+function createComputedGetter (key) {
+  return function computedGetter () {
+    var watcher = this._computedWatchers && this._computedWatchers[key];
+    if (watcher) {
+      if (watcher.dirty) {
+        watcher.evaluate();
+      }
+      if (Dep.target) {
+        watcher.depend();
+      }
+      return watcher.value
+    }
+  }
+}
+```
+当 render 函数执行访问到 fullName 的时候，就触发了计算属性的 getter，它会拿到计算属性对应的 watcher，如果 dirty 属性为真会执行 watcher.evaluate()，来看一下它的定义：
+```js
+evaluate () {
+  this.value = this.get()
+  this.dirty = false
+}
+```
+get 函数执行时，首先会把 computed watcher 入栈， Dep.target 指向 computed watcher：
+![An image](../image/targetStack.png)
+
+接着执行 getter 函数，此处指
+```js
+function () {
+  return this.firstName + ' ' + this.lastName
+}
+```
+由于 firstName、lastName 为响应式数据，会触发各自的依赖收集，firstName、lastName 对应的 dep 会把 computed watcher 作为依赖收集起来
+![An image](../image/dep2.png)
+
+getter 函数执行完后，执行 popTarget, computed watcher 出栈，Dep.target 指向渲染 watcher。
+![An image](../image/targetStack2.png)
+
+函数最后会把 dirty 置为 false。接着判断 Dep.target 存在，执行 watcher.depend，来看一下它的定义：
+```js
+depend () {
+  // deps: [firstName 的 dep, lastName 的 dep]
+  let i = this.deps.length
+  while (i--) {
+    this.deps[i].depend()
+  }
+}
+```
+它会拿到 computed watcher 的 deps 属性，遍历 deps 里面的每一项把渲染 watcher 作为依赖收集起来。此时 firstName、lastName 的 dep 结构如下:
+
+![An image](../image/dep.png)
+
+当我们对 firstName、lastName 做修改时，会触发各自 dep.notify，然后执行 watcher.update()。
+我们来看下这块实现:
+```js
+update () {
+  /* istanbul ignore else */
+  if (this.lazy) {
+    this.dirty = true
+  } else if (this.sync) {
+    this.run()
+  } else {
+    queueWatcher(this)
+  }
+}
+```
+如果是计算属性 watcher,会把 dirty 改为 true, 普通 watcher 会执行 queueWatcher 逻辑，对于渲染 watcher 而言，会再次执行 updateCompoonent 函数，页面重新渲染。
+
+流程图如下: 
+
+![An image](../image/computed.png)
+
 接下来我们来分析一下侦听属性 `watch` 是怎么实现的。
 
 ## watch

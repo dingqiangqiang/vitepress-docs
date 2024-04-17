@@ -34,7 +34,10 @@ export default {
             collapsed: true,
             items: [
                 { text: '01-20 关于 import type 的理解', link: '/dailyNote/type' },
-                { text: '01-21 Vue3 项目搭建', link: '/dailyNote/project' }
+                { text: '01-21 Vue3 项目搭建', link: '/dailyNote/project' },
+                { text: '04-14 HTTP 缓存', link: '/dailyNote/cache' },
+                { text: '04-14 TCP', link: '/dailyNote/tcp' },
+                { text: '04-17 js 语法编写优化', link: 'dailyNote/syntax-optimize'}
             ],
         },
         // {
@@ -944,5 +947,21 @@ export default {
             text: 'MongoDB',
             link: '/koa/mongodb'
         }
-    ]
+    ],
+    '/database/': [
+        {
+            text: 'mysql',
+            collapsed: false,
+            items: [
+                {
+                    text: '常用语法',
+                    link: '/database/mysql/'
+                },
+                {
+                    text: 'mysql2',
+                    link: '/database/mysql/mysql2'
+                }
+            ]
+        },
+    ],
 }

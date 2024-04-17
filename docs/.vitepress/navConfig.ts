@@ -19,7 +19,7 @@ export default [
     },
     {
       text: '全栈基石',
-      items: [{ text: 'Node', link: '/node/' }, { text: 'Express', link: '/express/' }, { text: 'Koa', link: '/koa/onion' }]
+      items: [{ text: 'Node', link: '/node/' }, { text: 'Express', link: '/express/' }, { text: 'Koa', link: '/koa/onion' }, { text: '数据库', link: '/database/mysql/' }]
     },
     { text: '📝 备忘录', link: '/develop-summary/string' }
 ]

@@ -39,4 +39,16 @@
 
 分析了 Vuex 的实现原理，深入分析了它的初始化过程，常用 API 以及插件部分的实现。
 
+## 如何调试源码
+```js
+import Vue from 'vue' // vue 导入入口
+
+1、找到 node_modules/vue/package.json 中的入口配置
+2、{ 
+    "main": "dist/vue.runtime.common.js",
+    "module": "dist/vue.runtime.esm.js",
+   }
+3、找到 dist/vue.esm.js 开始调试
+```
+
 

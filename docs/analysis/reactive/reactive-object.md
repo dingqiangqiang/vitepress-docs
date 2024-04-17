@@ -362,6 +362,37 @@ export function defineReactive (
 
 `defineReactive` 函数最开始初始化 `Dep` 对象的实例，接着拿到 `obj` 的属性描述符，然后对子对象递归调用 `observe` 方法，这样就保证了无论 `obj` 的结构多复杂，它的所有子属性也能变成响应式的对象，这样我们访问或修改 `obj` 中一个嵌套较深的属性，也能触发 getter 和 setter。最后利用 `Object.defineProperty` 去给 `obj` 的属性 `key` 添加 getter 和 setter。而关于 getter 和 setter 的具体实现，我们会在之后介绍。
 
+## 对象冻结(性能优化)
++ Object.freeze(obj)
+> 冻结一个对象，该方法会在现有对象上调用 Object.seal() 方法，并把所有现有属性的 writable 描述符置为 false
+```js
+let foo = { a: 1 }
+
+// { value: 1, writable: true, enumerable: true, configurable: true }
+console.log(Object.getOwnPropertyDescriptor(foo, 'a'));
+
+console.log(Object.freeze(foo)) // { a: 1 }
+
+// { value: 1, writable: false, enumerable: true, configurable: false }
+console.log(Object.getOwnPropertyDescriptor(foo, 'a'));
+```
+
++ Object.isFrozen(obj)
+> 用来检测指定对象是否已被冻结
+
+```js
+let foo = { a: 1, b: 2 }
+
+Object.isFrozen(foo) // false
+
+console.log(Object.freeze(foo)) // {a: 1, b: 2}
+
+console.log(Object.isFrozen(foo)) // true
+
+foo.a = 3; // 修改属性
+
+console.log(foo) // { a: 1, b: 2 }
+```
 ## 总结
 
 这一节我们介绍了响应式对象，核心就是利用 `Object.defineProperty` 给数据添加了 getter 和 setter，目的就是为了在我们访问数据以及写数据的时候能自动执行一些逻辑：getter 做的事情是依赖收集，setter 做的事情是派发更新，那么在接下来的章节我们会重点对这两个过程分析。
