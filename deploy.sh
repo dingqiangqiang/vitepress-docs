@@ -5,7 +5,7 @@ set -e
 npm run build
 
 # cd docs/.vitepress/dist
-cd dist 
+cd dist
 
 git init 
 git add -A
