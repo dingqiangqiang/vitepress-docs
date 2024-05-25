@@ -37,7 +37,9 @@ export default {
                 { text: '01-21 Vue3 项目搭建', link: '/dailyNote/project' },
                 { text: '04-14 HTTP 缓存', link: '/dailyNote/cache' },
                 { text: '04-14 TCP', link: '/dailyNote/tcp' },
-                { text: '04-17 js 语法编写优化', link: 'dailyNote/syntax-optimize'}
+                { text: '04-17 js 语法编写优化', link: 'dailyNote/syntax-optimize'},
+                { text: '04-20 websocket 实操', link: 'dailyNote/websocket'},
+                { text: '04-21 部署', link: 'dailyNote/deploy'}
             ],
         },
         // {

@@ -8,15 +8,23 @@ brew install mysql
 brew services list
 brew services start mysql
 brew services stop mysql
-mysql -u root -p 输入密码
+mysql -u root -p 密码
 
 brew list |grep mysql
 show databases; 
-use 库名  
-show tables; 
+# 建库
+create database 库名 default character set utf8mb4;
+# 删库
+drop database if exists 库名;
+use 库名 
+show tables;
+# 建表 
 desc 表名; 
+describe 表名;
+# 查
 select * from 表名;
 quit 退出
+exit 退出
 ```
 ## 常用 sql
 - 创建数据库
