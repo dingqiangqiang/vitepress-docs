@@ -8,7 +8,7 @@ cd docs/.vitepress/dist
 
 git init 
 git add -A
-git commit -m 'deploy'
+git commit -m 'deploy' 
 git push -f https://github.com/dingqiangqiang/docs.git main
 
 cd -
