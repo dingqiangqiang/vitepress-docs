@@ -3,10 +3,9 @@ import sidebarConfig from './sidebarConfig'
 import navConfig from './navConfig'
 
 export default defineConfig({
-  // base: '/docs/',
-  base: '/',
+  base: '/docs/',
   title: 'StriveDocs',
-  outDir: '../dist',
+  // outDir: '../dist',
   description: '前端技术博客',
   appearance: 'dark',
   ignoreDeadLinks: true,
